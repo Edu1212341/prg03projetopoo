@@ -4,10 +4,17 @@
  */
 package br.com.ifba.usuario.service;
 
+import br.com.ifba.usuario.entity.Usuario;
+import java.util.List;
+
 /**
  *
  * @author eduardo
  */
 public interface UsuarioIService {
-    
+    Usuario salvar(Usuario usuario);  
+    Usuario atualizar(Usuario usuario);
+    Usuario buscarPorId(Long id);
+    List<Usuario> listarTodos();
+    void deletar(Long id);
 }

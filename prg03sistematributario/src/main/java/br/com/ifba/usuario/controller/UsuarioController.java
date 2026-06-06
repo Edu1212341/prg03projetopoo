@@ -4,10 +4,14 @@
  */
 package br.com.ifba.usuario.controller;
 
+import org.springframework.stereotype.Controller;
+
 /**
  *
  * @author eduardo
  */
-public class UsuarioController {
+
+@Controller
+public class UsuarioController implements UsuarioIController{
     
 }

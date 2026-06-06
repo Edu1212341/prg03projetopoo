@@ -4,10 +4,173 @@
  */
 package br.com.ifba.usuario.service;
 
+import br.com.ifba.infraestructure.util.StringUtil;
+import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.repository.UsuarioRepository;
+import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 /**
  *
  * @author eduardo
  */
-public class UsuarioService {
+@Service
+@RequiredArgsConstructor
+public class UsuarioService implements UsuarioIService {
     
+    private final UsuarioRepository usuarioRepository;
+    
+    private static final Logger log = LoggerFactory.getLogger(UsuarioService.class);
+    @Override
+    public Usuario salvar(Usuario usuario) {
+        log.info("Iniciando o processo de salvar ");
+        validarUsuario(usuario);
+        Optional<Usuario> usuarioComMesmoLogin = usuarioRepository.findByLogin(usuario.getLogin());
+        if (usuarioComMesmoLogin.isPresent()) {
+            throw new IllegalArgumentException("Este login já existe no sistema.");
+        }
+        return usuarioRepository.save(usuario);
+    }
+
+    @Override
+    public Usuario atualizar(Usuario usuario) {
+        log.info("Iniciando processo de atualização de cadsastro");
+        validarUsuario(usuario);
+        boolean usuarioExisteNoBanco = usuarioRepository.existsById(usuario.getId());
+        if (!usuarioExisteNoBanco) {
+            throw new IllegalArgumentException("Usuário não encontrado no banco de dados.");
+        }
+
+        // E verificamos se o login pertence a outro usuário
+        Optional<Usuario> usuarioComMesmoLogin = usuarioRepository.findByLogin(usuario.getLogin());
+        if (usuarioComMesmoLogin.isPresent()) {
+            boolean loginPertenceAOutroUsuario = !usuarioComMesmoLogin.get().getId().equals(usuario.getId());
+            if (loginPertenceAOutroUsuario) {
+                throw new IllegalArgumentException("Este login já está sendo utilizado por outro usuário.");
+            }
+        }
+
+        return usuarioRepository.save(usuario);
+    }
+
+    @Override
+    public Usuario buscarPorId(Long id) {
+        log.info("Buscando usuário de ID: {}.", id);
+
+        Optional<Usuario> usuarioEncontrado = usuarioRepository.findById(id);
+
+        if (usuarioEncontrado.isEmpty()) {
+            throw new IllegalArgumentException("Usuário não encontrado no banco de dados.");
+        }
+
+        return usuarioEncontrado.get();
+    }
+
+    @Override
+    public void deletar(Long id) {
+       log.info("Deletando usuário de ID: {}.", id);
+
+        boolean usuarioExisteNoBanco = usuarioRepository.existsById(id);
+        if (!usuarioExisteNoBanco) {
+            throw new IllegalArgumentException("Usuário não encontrado no banco de dados.");
+        }
+        usuarioRepository.deleteById(id);
+        log.info("Usuário de ID: {} deletado com sucesso.", id);
+    }
+
+    @Override
+    public List<Usuario> listarTodos() {
+        log.info("Listando todos os usuários.");
+
+        List<Usuario> usuarios = usuarioRepository.findAll();
+
+        if (usuarios.isEmpty()) {
+            throw new IllegalArgumentException("Nenhum usuário cadastrado no sistema.");
+        }
+
+        return usuarios;
+    }
+    
+    public void validarUsuario(Usuario usuario) {
+        
+        log.info("Executando a validação de segurança para usuário");
+
+        if (usuario == null) {//se usuario nulo
+            log.error("Falha: Tentativa de validar um objeto Usuário nulo.");
+            throw new IllegalArgumentException("Os dados do usuário não foram preenchidos.");
+        }
+
+        //  Validação do nome
+       
+        if (StringUtil.isNullOrEmpty(usuario.getNome())) {//se o nome for null ou estiver vazio
+            log.warn("Falha: Nome do funcionário está em branco.");
+            throw new IllegalArgumentException("O nome do funcionário é obrigatório e não pode estar vazio.");
+        }
+        usuario.setNome(usuario.getNome().trim());
+
+        if (usuario.getNome().length() < 3 || usuario.getNome().length() > 100) {//se o nome tiver mais de 100 caracteres ou for menor que 3
+            log.warn("Falha: Tamanho do nome inválido");
+            throw new IllegalArgumentException("O nome deve ter entre 3 e 100 caracteres.");
+        }
+
+        if (!usuario.getNome().matches("^[\\p{L} '-]+$")) {//Aceita letras (acentuadas também) e determinados caracteres especiais
+            log.warn("Falha: Nome contém caracteres inválidos.");
+            throw new IllegalArgumentException("O nome deve conter apenas letras e os seguintes caracteres: .'-]");
+        }
+
+        // Validação do login
+        if (StringUtil.isNullOrEmpty(usuario.getLogin())) {
+            log.warn("Falha: Login de acesso está em branco");
+            throw new IllegalArgumentException("O login de acesso é obrigatório.");
+        }
+        usuario.setLogin(usuario.getLogin().trim().toLowerCase());
+
+        if (!usuario.getLogin().matches("^[a-z0-9._-]{4,30}$")) {
+            log.warn("Validação falhou: Login com formato inválido");
+            throw new IllegalArgumentException(
+                "O login deve ter entre 4 e 30 caracteres e conter apenas letras minúsculas, números, e as seguintes pontuações . - _"
+            );
+        }
+
+
+        // Validação do nível de acesso
+
+        if (StringUtil.isNullOrEmpty(usuario.getNivelAcesso())) {
+            log.warn("Validação falhou: Nível de acesso não definido.");
+            throw new IllegalArgumentException("O nível de acesso (cargo/perfil) é obrigatório.");
+        }
+
+        String nivel = usuario.getNivelAcesso().trim().toUpperCase();
+        usuario.setNivelAcesso(nivel);
+
+        if (!nivel.equals("ADMIN") && !nivel.equals("FISCAL") && !nivel.equals("ATENDENTE")) {
+            log.error("Alerta de Segurança: Tentativa de injetar perfil inválido: '{}'.", nivel);
+            throw new IllegalArgumentException("Nível de acesso inválido! Escolha entre: ADMIN, FISCAL ou ATENDENTE.");
+        }
+
+
+        // Validação de senha
+
+        if (StringUtil.isNullOrEmpty(usuario.getSenha())) {
+            log.warn("Validação falhou: Senha ausente.");
+            throw new IllegalArgumentException("A senha de acesso é obrigatória.");
+        }
+
+        if (usuario.getSenha().length() < 6) {
+            log.warn("Validação falhou: Senha muito curta ({} caracteres).", usuario.getSenha().length());
+            throw new IllegalArgumentException("A senha deve ter no mínimo 6 caracteres.");
+        }
+
+        if (!usuario.getSenha().matches("^(?=.*[A-Za-z])(?=.*\\d).{6,}$")) {
+            log.warn("Validação falhou: Senha não atende aos critérios mínimos de complexidade.");
+            throw new IllegalArgumentException("A senha deve conter pelo menos uma letra e um número.");
+        }
+
+        
+        log.info("Validação concluída.");
+    }
 }
