@@ -37,24 +37,44 @@ public class UsuarioService implements UsuarioIService {
     }
 
     @Override
-    public Usuario atualizar(Usuario usuario) {
-        log.info("Iniciando processo de atualização de cadsastro");
-        validarUsuario(usuario);
-        boolean usuarioExisteNoBanco = usuarioRepository.existsById(usuario.getId());
-        if (!usuarioExisteNoBanco) {
-            throw new IllegalArgumentException("Usuário não encontrado no banco de dados.");
-        }
+    public Usuario atualizar(Long id, Usuario dadosNovos) {
+        log.info("Iniciando processo de atualização de cadastro para o ID: {}", id);
+        Usuario usuarioExistente = buscarPorId(id);
 
-        // E verificamos se o login pertence a outro usuário
-        Optional<Usuario> usuarioComMesmoLogin = usuarioRepository.findByLogin(usuario.getLogin());
+        //para proteger o ADMIN
+        if (usuarioExistente.getLogin().equalsIgnoreCase("admin")) {
+            // Impede a alteração do login "admin"
+            if (!dadosNovos.getLogin().equalsIgnoreCase("admin")) {
+                throw new IllegalArgumentException("Operação negada: O login do Administrador padrão não pode ser alterado.");
+            }
+            // Impede o rebaixamento de cargo
+            if (!dadosNovos.getNivelAcesso().equalsIgnoreCase("ADMIN")) {
+                throw new IllegalArgumentException("Operação negada: O Administrador padrão não pode ser rebaixado de cargo.");
+            }
+        }
+        
+        Optional<Usuario> usuarioComMesmoLogin = usuarioRepository.findByLogin(dadosNovos.getLogin());
         if (usuarioComMesmoLogin.isPresent()) {
-            boolean loginPertenceAOutroUsuario = !usuarioComMesmoLogin.get().getId().equals(usuario.getId());
+            boolean loginPertenceAOutroUsuario = !usuarioComMesmoLogin.get().getId().equals(id);
             if (loginPertenceAOutroUsuario) {
                 throw new IllegalArgumentException("Este login já está sendo utilizado por outro usuário.");
             }
         }
 
-        return usuarioRepository.save(usuario);
+        // 3. Transfere os dados da tela para a entidade gerenciada
+        usuarioExistente.setNome(dadosNovos.getNome());
+        usuarioExistente.setLogin(dadosNovos.getLogin());
+        usuarioExistente.setNivelAcesso(dadosNovos.getNivelAcesso());
+    
+        // Atualiza a senha apenas se foi digitada uma nova
+        if (dadosNovos.getSenha() != null && !dadosNovos.getSenha().trim().isEmpty()) {
+            usuarioExistente.setSenha(dadosNovos.getSenha());
+        }
+
+        // 4. Valida a entidade já mesclada antes de salvar
+        validarUsuario(usuarioExistente);
+
+        return usuarioRepository.save(usuarioExistente);
     }
 
     @Override
@@ -96,10 +116,6 @@ public class UsuarioService implements UsuarioIService {
         log.info("Listando todos os usuários.");
 
         List<Usuario> usuarios = usuarioRepository.findAll();
-
-        if (usuarios.isEmpty()) {
-            throw new IllegalArgumentException("Nenhum usuário cadastrado no sistema.");
-        }
 
         return usuarios;
     }

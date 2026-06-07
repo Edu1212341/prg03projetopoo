@@ -4,7 +4,7 @@
   <NonVisualComponents>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
-        <Menu class="javax.swing.JMenu" name="jMenu1">
+        <Menu class="javax.swing.JMenu" name="mnuSistema">
           <Properties>
             <Property name="text" type="java.lang.String" value="Sistema"/>
           </Properties>
@@ -19,14 +19,14 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenu2">
+        <Menu class="javax.swing.JMenu" name="mnuCadastros">
           <Properties>
             <Property name="text" type="java.lang.String" value="Cadastros"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuCadUsuario">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Cadastrar Usuarios"/>
+                <Property name="text" type="java.lang.String" value="Gerenciar Usuarios"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuCadUsuarioActionPerformed"/>
@@ -34,17 +34,17 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuCadContribuinte">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Cadastrar Contribuintes"/>
+                <Property name="text" type="java.lang.String" value="Gerenciar Contribuintes"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuImovel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Cadastrar Im&#xf3;veis"/>
+                <Property name="text" type="java.lang.String" value="Gerenciar Im&#xf3;veis"/>
               </Properties>
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenu3">
+        <Menu class="javax.swing.JMenu" name="mnuTributos">
           <Properties>
             <Property name="text" type="java.lang.String" value="Tributos"/>
           </Properties>
@@ -61,7 +61,7 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenu4">
+        <Menu class="javax.swing.JMenu" name="mnuAjuda">
           <Properties>
             <Property name="text" type="java.lang.String" value="Ajuda"/>
           </Properties>

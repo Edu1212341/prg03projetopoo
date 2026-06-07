@@ -4,18 +4,22 @@
  */
 package br.com.ifba.usuario.view;
 
+import org.springframework.stereotype.Component;
+
 /**
  *
  * @author eduar
  */
+@Component
 public class TelaMenuPrincipal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaMenuPrincipal.class.getName());
-
+    private final GerenciarUsuarios telaGerenciarUsuarios;
     /**
      * Creates new form TelaMenuPrincipal
      */
-    public TelaMenuPrincipal() {
+    public TelaMenuPrincipal(GerenciarUsuarios telaGerenciarUsuarios) {
+        this.telaGerenciarUsuarios = telaGerenciarUsuarios;
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         initComponents();
@@ -31,58 +35,58 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        mnuSistema = new javax.swing.JMenu();
         mnuSair = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        mnuCadastros = new javax.swing.JMenu();
         mnuCadUsuario = new javax.swing.JMenuItem();
         mnuCadContribuinte = new javax.swing.JMenuItem();
         mnuImovel = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
+        mnuTributos = new javax.swing.JMenu();
         mnuEmissao = new javax.swing.JMenuItem();
         mnuConsulta = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
+        mnuAjuda = new javax.swing.JMenu();
         mnuSobre = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jMenu1.setText("Sistema");
+        mnuSistema.setText("Sistema");
 
         mnuSair.setText("Sair");
         mnuSair.addActionListener(this::mnuSairActionPerformed);
-        jMenu1.add(mnuSair);
+        mnuSistema.add(mnuSair);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(mnuSistema);
 
-        jMenu2.setText("Cadastros");
+        mnuCadastros.setText("Cadastros");
 
-        mnuCadUsuario.setText("Cadastrar Usuarios");
+        mnuCadUsuario.setText("Gerenciar Usuarios");
         mnuCadUsuario.addActionListener(this::mnuCadUsuarioActionPerformed);
-        jMenu2.add(mnuCadUsuario);
+        mnuCadastros.add(mnuCadUsuario);
 
-        mnuCadContribuinte.setText("Cadastrar Contribuintes");
-        jMenu2.add(mnuCadContribuinte);
+        mnuCadContribuinte.setText("Gerenciar Contribuintes");
+        mnuCadastros.add(mnuCadContribuinte);
 
-        mnuImovel.setText("Cadastrar Imóveis");
-        jMenu2.add(mnuImovel);
+        mnuImovel.setText("Gerenciar Imóveis");
+        mnuCadastros.add(mnuImovel);
 
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(mnuCadastros);
 
-        jMenu3.setText("Tributos");
+        mnuTributos.setText("Tributos");
 
         mnuEmissao.setText("Emissão de Guias");
-        jMenu3.add(mnuEmissao);
+        mnuTributos.add(mnuEmissao);
 
         mnuConsulta.setText("Consulta Débitos");
-        jMenu3.add(mnuConsulta);
+        mnuTributos.add(mnuConsulta);
 
-        jMenuBar1.add(jMenu3);
+        jMenuBar1.add(mnuTributos);
 
-        jMenu4.setText("Ajuda");
+        mnuAjuda.setText("Ajuda");
 
         mnuSobre.setText("Sobre");
-        jMenu4.add(mnuSobre);
+        mnuAjuda.add(mnuSobre);
 
-        jMenuBar1.add(jMenu4);
+        jMenuBar1.add(mnuAjuda);
 
         setJMenuBar(jMenuBar1);
 
@@ -106,45 +110,25 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
     private void mnuCadUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCadUsuarioActionPerformed
         // TODO add your handling code here:
+            telaGerenciarUsuarios.setVisible(true);
     }//GEN-LAST:event_mnuCadUsuarioActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new TelaMenuPrincipal().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu mnuAjuda;
     private javax.swing.JMenuItem mnuCadContribuinte;
     private javax.swing.JMenuItem mnuCadUsuario;
+    private javax.swing.JMenu mnuCadastros;
     private javax.swing.JMenuItem mnuConsulta;
     private javax.swing.JMenuItem mnuEmissao;
     private javax.swing.JMenuItem mnuImovel;
     private javax.swing.JMenuItem mnuSair;
+    private javax.swing.JMenu mnuSistema;
     private javax.swing.JMenuItem mnuSobre;
+    private javax.swing.JMenu mnuTributos;
     // End of variables declaration//GEN-END:variables
 }

@@ -27,8 +27,8 @@ public class UsuarioController implements UsuarioIController{
     }
 
     @Override
-    public Usuario atualizar(Usuario usuario) {
-        return usuarioService.atualizar(usuario);
+    public Usuario atualizar(Long id, Usuario usuario) {
+        return usuarioService.atualizar(id, usuario);
     }
 
     @Override

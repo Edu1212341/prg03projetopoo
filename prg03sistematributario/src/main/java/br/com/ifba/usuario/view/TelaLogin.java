@@ -20,7 +20,8 @@ import org.springframework.stereotype.Component;
 public class TelaLogin extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaLogin.class.getName());
-     private final UsuarioIController usuarioController;
+    private final UsuarioIController usuarioController;
+    public static Usuario usuarioLogado;
     /**
      * Creates new form TelaInicial
      */
@@ -44,8 +45,8 @@ public class TelaLogin extends javax.swing.JFrame {
         lblLogin = new javax.swing.JLabel();
         lblSenha = new javax.swing.JLabel();
         txtLogin = new javax.swing.JTextField();
-        txtSenha = new javax.swing.JTextField();
         lblTitulo = new javax.swing.JLabel();
+        pswSenha = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(700, 400));
@@ -65,8 +66,6 @@ public class TelaLogin extends javax.swing.JFrame {
 
         txtLogin.addActionListener(this::txtLoginActionPerformed);
 
-        txtSenha.addActionListener(this::txtSenhaActionPerformed);
-
         lblTitulo.setFont(new java.awt.Font("Consolas", 1, 24)); // NOI18N
         lblTitulo.setText("Sistema de Gerenciamento de Tributos");
 
@@ -81,8 +80,8 @@ public class TelaLogin extends javax.swing.JFrame {
                     .addComponent(lblSenha))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
-                    .addComponent(txtSenha))
+                    .addComponent(txtLogin)
+                    .addComponent(pswSenha, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(117, Short.MAX_VALUE)
@@ -103,12 +102,12 @@ public class TelaLogin extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblLogin))
-                .addGap(29, 29, 29)
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSenha))
-                .addGap(48, 48, 48)
-                .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblSenha)
+                    .addComponent(pswSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(51, 51, 51)
+                .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
                 .addGap(108, 108, 108))
         );
 
@@ -118,29 +117,25 @@ public class TelaLogin extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
         String login = txtLogin.getText();
-        String senha = new String(txtSenha.getText());
+        //get.password porque assim a senha fica mais segura (obviamente)
+        String senha = new String(pswSenha.getPassword());
 
         try {
-            // 2. Chama o controller (que já foi injetado pelo Spring)
+            // controller chega
             Usuario user = usuarioController.autenticar(login, senha);
 
-            // 3. Se não deu erro, logou!
+            // se deu bom é porque logou
             JOptionPane.showMessageDialog(this, "Login efetuado com sucesso!");
-        
+            TelaLogin.usuarioLogado = user;
             //  abre a próxima tela (o Menu Principal)
             TelaMenuPrincipal menu = context.getBean(TelaMenuPrincipal.class);
             menu.setVisible(true);
-            this.dispose(); // Fecha o login
+            this.dispose(); 
         
-        } catch (IllegalArgumentException e) {
-            // 5. Se o Service lançar erro (senha errada, user não existe), mostramos aqui
+        } catch (IllegalArgumentException e) {//cata os erros
             javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
-
-    private void txtSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSenhaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtSenhaActionPerformed
 
     private void txtLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLoginActionPerformed
         // TODO add your handling code here:
@@ -151,7 +146,7 @@ public class TelaLogin extends javax.swing.JFrame {
     private javax.swing.JLabel lblLogin;
     private javax.swing.JLabel lblSenha;
     private javax.swing.JLabel lblTitulo;
+    private javax.swing.JPasswordField pswSenha;
     private javax.swing.JTextField txtLogin;
-    private javax.swing.JTextField txtSenha;
     // End of variables declaration//GEN-END:variables
 }
