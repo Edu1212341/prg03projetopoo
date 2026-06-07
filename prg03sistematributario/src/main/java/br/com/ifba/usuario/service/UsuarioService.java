@@ -92,30 +92,29 @@ public class UsuarioService implements UsuarioIService {
 
     @Override
     public void deletar(Long id) {
-       log.info("Iniciando a exclusão do usuário ID: {}", id);
+       log.info("Iniciando a INATIVAÇÃO do usuário ID: {}", id);
+       
+       if (id == null || id <= 0) {
+           log.error("Tentativa de deletar com ID nulo ou inválido.");
+           throw new IllegalArgumentException("O ID do usuário é inválido.");
+       }
 
-        // Verifica se tá no banco
-        if (id == null || id <= 0) {
-            log.error("Tentativa de deletar com ID nulo ou inválido.");
-            throw new IllegalArgumentException("O ID do usuário é inválido.");
-        }
-        // Se não existir, esta linha já lança o erro e para tudo!
-        Usuario usuario = buscarPorId(id);
+       Usuario usuario = buscarPorId(id);
 
-        // É impossivel deletar uma conta de admin, quem fará isso será quem têm acesso direto ao banco.
-        if (usuario.getLogin().equalsIgnoreCase("admin") || usuario.getNivelAcesso().equalsIgnoreCase("ADMIN")) {
-            log.warn("Alerta de Segurança: Tentativa de deletar a conta Administradora bloqueada.");
-            throw new IllegalArgumentException("Operação negada: Não é permitido excluir um perfil de Administrador.");
-        }
-        usuarioRepository.delete(usuario);
-        log.info("Usuário ID {} deletado com sucesso do banco de dados.", id);
+       if (usuario.getLogin().equalsIgnoreCase("admin") || usuario.getNivelAcesso().equalsIgnoreCase("ADMIN")) {
+           throw new IllegalArgumentException("Operação negada: Não é permitido inativar um perfil de Administrador.");
+       }
+       usuario.setAtivo(false);
+       usuarioRepository.save(usuario);
+    
+       log.info("Usuário ID {} inativado com sucesso.", id);
     }
 
     @Override
     public List<Usuario> listarTodos() {
         log.info("Listando todos os usuários.");
 
-        List<Usuario> usuarios = usuarioRepository.findAll();
+        List<Usuario> usuarios = usuarioRepository.findByAtivoTrue();
 
         return usuarios;
     }
@@ -123,17 +122,17 @@ public class UsuarioService implements UsuarioIService {
     // Método para ser usado pela tela de login
     @Override
     public Usuario autenticar(String login, String senha) {
-        
-        // Procura o usuário
-        Usuario usuario = usuarioRepository.findByLogin(login)
-                .orElseThrow(() -> new IllegalArgumentException("Erro: Usuário não encontrado."));
-        
-        // Olha se a senha digitada é igual à senha do banco
+        Usuario usuario = usuarioRepository.findByLogin(login).orElseThrow(() -> new IllegalArgumentException("Erro: Usuário não encontrado."));
+    
+        // NOVA VERIFICAÇÃO: Ele está ativo?
+        if (!usuario.getAtivo()) {
+            throw new IllegalArgumentException("Erro: Esta conta está inativada. Procure o administrador.");
+        }
+    
         if (!usuario.getSenha().equals(senha)) {
             throw new IllegalArgumentException("Erro: Senha incorreta.");
         }
-        
-        // Se passou pelas verificações, devolve o usuário com tudo que ele tinha no banco, cargo, nome.
+    
         return usuario;
     }
     

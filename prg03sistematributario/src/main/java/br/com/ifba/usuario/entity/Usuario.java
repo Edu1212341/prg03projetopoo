@@ -37,4 +37,7 @@ public class Usuario extends PersistenceEntity {
 
     @Column(name = "nivel_acesso", nullable = false)
     private String nivelAcesso;
+    
+    @Column (name = "Ativo", nullable = false, columnDefinition = "boolean default true")
+    private Boolean ativo = true;
 }
