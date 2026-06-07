@@ -4,8 +4,11 @@
  */
 package br.com.ifba.usuario.view;
 
+import static br.com.ifba.Application.context;
 import br.com.ifba.usuario.controller.UsuarioIController;
 import br.com.ifba.usuario.entity.Usuario;
+import ch.qos.logback.core.Context;
+import ch.qos.logback.core.joran.action.ActionUtil;
 import javax.swing.JOptionPane;
 import org.springframework.stereotype.Component;
 
@@ -125,6 +128,8 @@ public class TelaLogin extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Login efetuado com sucesso!");
         
             //  abre a próxima tela (o Menu Principal)
+            TelaMenuPrincipal menu = context.getBean(TelaMenuPrincipal.class);
+            menu.setVisible(true);
             this.dispose(); // Fecha o login
         
         } catch (IllegalArgumentException e) {
