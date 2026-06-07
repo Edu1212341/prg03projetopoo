@@ -4,6 +4,10 @@
  */
 package br.com.ifba.usuario.controller;
 
+import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.service.UsuarioIService;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -12,6 +16,37 @@ import org.springframework.stereotype.Controller;
  */
 
 @Controller
+@RequiredArgsConstructor
 public class UsuarioController implements UsuarioIController{
+
+    private final UsuarioIService usuarioService;
+
+    @Override
+    public Usuario salvar(Usuario usuario) {
+        return usuarioService.salvar(usuario);
+    }
+
+    @Override
+    public Usuario atualizar(Usuario usuario) {
+        return usuarioService.atualizar(usuario);
+    }
+
+    @Override
+    public Usuario buscarPorId(Long id) {
+        return usuarioService.buscarPorId(id);
+    }
+
+    @Override
+    public List<Usuario> listarTodos() {
+        return usuarioService.listarTodos();
+    }
+
+    @Override
+    public void deletar(Long id) {
+        usuarioService.deletar(id);
+    }
     
+    public Usuario autenticar(String login, String senha) {
+        return usuarioService.autenticar(login, senha);
+    }
 }

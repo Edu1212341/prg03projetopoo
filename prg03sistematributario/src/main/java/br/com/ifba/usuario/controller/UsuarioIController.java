@@ -4,10 +4,18 @@
  */
 package br.com.ifba.usuario.controller;
 
+import br.com.ifba.usuario.entity.Usuario;
+import java.util.List;
+
 /**
  *
  * @author eduardo
  */
 public interface UsuarioIController {
-    
+    Usuario salvar(Usuario usuario);
+    Usuario atualizar(Usuario usuario);
+    Usuario buscarPorId(Long id);
+    List<Usuario> listarTodos();
+    void deletar(Long id);
+    Usuario autenticar(String login, String senha);
 }

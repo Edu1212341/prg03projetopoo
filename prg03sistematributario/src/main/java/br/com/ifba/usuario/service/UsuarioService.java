@@ -4,7 +4,7 @@
  */
 package br.com.ifba.usuario.service;
 
-import br.com.ifba.infraestructure.util.StringUtil;
+import br.com.ifba.infrastructure.util.StringUtil;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.repository.UsuarioRepository;
 import java.util.List;
@@ -72,14 +72,23 @@ public class UsuarioService implements UsuarioIService {
 
     @Override
     public void deletar(Long id) {
-       log.info("Deletando usuário de ID: {}.", id);
+       log.info("Iniciando a exclusão do usuário ID: {}", id);
 
-        boolean usuarioExisteNoBanco = usuarioRepository.existsById(id);
-        if (!usuarioExisteNoBanco) {
-            throw new IllegalArgumentException("Usuário não encontrado no banco de dados.");
+        // Verifica se tá no banco
+        if (id == null || id <= 0) {
+            log.error("Tentativa de deletar com ID nulo ou inválido.");
+            throw new IllegalArgumentException("O ID do usuário é inválido.");
         }
-        usuarioRepository.deleteById(id);
-        log.info("Usuário de ID: {} deletado com sucesso.", id);
+        // Se não existir, esta linha já lança o erro e para tudo!
+        Usuario usuario = buscarPorId(id);
+
+        // É impossivel deletar uma conta de admin, quem fará isso será quem têm acesso direto ao banco.
+        if (usuario.getLogin().equalsIgnoreCase("admin") || usuario.getNivelAcesso().equalsIgnoreCase("ADMIN")) {
+            log.warn("Alerta de Segurança: Tentativa de deletar a conta Administradora bloqueada.");
+            throw new IllegalArgumentException("Operação negada: Não é permitido excluir um perfil de Administrador.");
+        }
+        usuarioRepository.delete(usuario);
+        log.info("Usuário ID {} deletado com sucesso do banco de dados.", id);
     }
 
     @Override
@@ -93,6 +102,23 @@ public class UsuarioService implements UsuarioIService {
         }
 
         return usuarios;
+    }
+    
+    // Método para ser usado pela tela de login
+    @Override
+    public Usuario autenticar(String login, String senha) {
+        
+        // Procura o usuário
+        Usuario usuario = usuarioRepository.findByLogin(login)
+                .orElseThrow(() -> new IllegalArgumentException("Erro: Usuário não encontrado."));
+        
+        // Olha se a senha digitada é igual à senha do banco
+        if (!usuario.getSenha().equals(senha)) {
+            throw new IllegalArgumentException("Erro: Senha incorreta.");
+        }
+        
+        // Se passou pelas verificações, devolve o usuário com tudo que ele tinha no banco, cargo, nome.
+        return usuario;
     }
     
     public void validarUsuario(Usuario usuario) {
