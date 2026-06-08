@@ -6,8 +6,8 @@ package br.com.ifba.usuario.view;
 
 import br.com.ifba.usuario.controller.UsuarioIController;
 import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.service.SessaoService;
 import javax.swing.JOptionPane;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,19 +21,20 @@ public class TelaCadastroUsuario extends javax.swing.JFrame {
     private GerenciarUsuarios telaPrincipal;
     private Long idEmEdicao = null;
     private String modo = "SALVAR";
-
+    private final SessaoService sessaoService;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaCadastroUsuario.class.getName());
 
     /**
      * Creates new form TelaCadastroCurso
      */    
-    public TelaCadastroUsuario(UsuarioIController usuarioController) {
-        this.usuarioController = usuarioController;
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        initComponents();
-    }
+    public TelaCadastroUsuario(UsuarioIController usuarioController, SessaoService sessaoService) {
+    this.usuarioController = usuarioController;
+    this.sessaoService = sessaoService; // Adicionado
+    this.setResizable(false);
+    this.setLocationRelativeTo(null);
+    initComponents();
+}
     
     public void setModo(String modo, Long id, GerenciarUsuarios principal) {
         this.modo = modo;
@@ -46,7 +47,7 @@ public class TelaCadastroUsuario extends javax.swing.JFrame {
     }
     
     private void configurarPermissoesDeTela() {
-        Usuario logado = TelaLogin.usuarioLogado;
+        Usuario logado = sessaoService.getUsuarioLogado();
     
         //Se NÃO for admin, ele nunca pode mexer no ComboBox de nível de acesso
         if (!logado.getNivelAcesso().equals("ADMIN")) {

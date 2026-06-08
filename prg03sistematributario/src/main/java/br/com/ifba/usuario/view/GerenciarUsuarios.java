@@ -6,7 +6,7 @@ package br.com.ifba.usuario.view;
 
 import br.com.ifba.usuario.controller.UsuarioIController;
 import br.com.ifba.usuario.entity.Usuario;
-import jakarta.annotation.PostConstruct;
+import br.com.ifba.usuario.service.SessaoService;
 import java.util.List;
 import javax.swing.JOptionPane;
 import org.springframework.stereotype.Component;
@@ -21,16 +21,18 @@ public class GerenciarUsuarios extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GerenciarUsuarios.class.getName());
     private final UsuarioIController usuarioController;
     private final TelaCadastroUsuario telaCadastro;
+    private final SessaoService sessaoService;
 
  
-    public GerenciarUsuarios(UsuarioIController usuarioController, TelaCadastroUsuario telaCadastro) {
-        this.usuarioController = usuarioController;
-        this.telaCadastro = telaCadastro;
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        initComponents();
-        carregarTabela();
-    }
+    public GerenciarUsuarios(UsuarioIController usuarioController, TelaCadastroUsuario telaCadastro, SessaoService sessaoService) {
+    this.usuarioController = usuarioController;
+    this.telaCadastro = telaCadastro;
+    this.sessaoService = sessaoService; 
+    this.setResizable(false);
+    this.setLocationRelativeTo(null);
+    initComponents();
+    carregarTabela();
+}
     
     public void carregarTabela() {
     javax.swing.table.DefaultTableModel modelo = 
@@ -168,7 +170,7 @@ public class GerenciarUsuarios extends javax.swing.JFrame {
         String nivelAlvo = (String) tblUsuarios.getValueAt(linha, 2); 
     
         // 3. Pega quem está logado no sistema neste exato momento
-        Usuario logado = TelaLogin.usuarioLogado;
+        Usuario logado = sessaoService.getUsuarioLogado();
 
         // 4. Bateria de Regras de Segurança da Interface
         if (logado != null) {

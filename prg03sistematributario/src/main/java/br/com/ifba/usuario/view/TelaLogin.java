@@ -7,8 +7,7 @@ package br.com.ifba.usuario.view;
 import static br.com.ifba.Application.context;
 import br.com.ifba.usuario.controller.UsuarioIController;
 import br.com.ifba.usuario.entity.Usuario;
-import ch.qos.logback.core.Context;
-import ch.qos.logback.core.joran.action.ActionUtil;
+import br.com.ifba.usuario.service.SessaoService;
 import javax.swing.JOptionPane;
 import org.springframework.stereotype.Component;
 
@@ -21,16 +20,17 @@ public class TelaLogin extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaLogin.class.getName());
     private final UsuarioIController usuarioController;
-    public static Usuario usuarioLogado;
+    private final SessaoService sessaoService;
     /**
      * Creates new form TelaInicial
      */
-    public TelaLogin(UsuarioIController usuarioController) {
-        this.usuarioController = usuarioController;
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        initComponents();
-    }
+    public TelaLogin(UsuarioIController usuarioController, SessaoService sessaoService) {
+    this.usuarioController = usuarioController;
+    this.sessaoService = sessaoService; // Adicionado
+    this.setResizable(false);
+    this.setLocationRelativeTo(null);
+    initComponents();
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -126,7 +126,7 @@ public class TelaLogin extends javax.swing.JFrame {
 
             // se deu bom é porque logou
             JOptionPane.showMessageDialog(this, "Login efetuado com sucesso!");
-            TelaLogin.usuarioLogado = user;
+            sessaoService.setUsuarioLogado(user);
             //  abre a próxima tela (o Menu Principal)
             TelaMenuPrincipal menu = context.getBean(TelaMenuPrincipal.class);
             menu.setVisible(true);

@@ -92,22 +92,24 @@ public class UsuarioService implements UsuarioIService {
 
     @Override
     public void deletar(Long id) {
-       log.info("Iniciando a INATIVAÇÃO do usuário ID: {}", id);
-       
-       if (id == null || id <= 0) {
-           log.error("Tentativa de deletar com ID nulo ou inválido.");
-           throw new IllegalArgumentException("O ID do usuário é inválido.");
-       }
+        log.info("Iniciando a INATIVAÇÃO do usuário ID: {}", id);
+   
+        if (id == null || id <= 0) {
+            log.error("Tentativa de deletar com ID nulo ou inválido.");
+            throw new IllegalArgumentException("O ID do usuário é inválido.");
+        }
 
-       Usuario usuario = buscarPorId(id);
+        Usuario usuario = buscarPorId(id);
 
-       if (usuario.getLogin().equalsIgnoreCase("admin") || usuario.getNivelAcesso().equalsIgnoreCase("ADMIN")) {
-           throw new IllegalArgumentException("Operação negada: Não é permitido inativar um perfil de Administrador.");
-       }
-       usuario.setAtivo(false);
-       usuarioRepository.save(usuario);
-    
-       log.info("Usuário ID {} inativado com sucesso.", id);
+        // Bloqueia apenas a conta raiz 'admin', permitindo que administradores excluam outros ADMINs
+        if (usuario.getLogin().equalsIgnoreCase("admin")) {
+            throw new IllegalArgumentException("Operação negada: Não é permitido inativar a conta do Administrador principal (admin).");
+        }
+   
+        usuario.setAtivo(false);
+        usuarioRepository.save(usuario);
+
+        log.info("Usuário ID {} inativado com sucesso.", id);
     }
 
     @Override

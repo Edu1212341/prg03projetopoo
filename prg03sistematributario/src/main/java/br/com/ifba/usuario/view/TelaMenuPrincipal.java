@@ -4,6 +4,8 @@
  */
 package br.com.ifba.usuario.view;
 
+import static br.com.ifba.Application.context;
+import br.com.ifba.usuario.service.SessaoService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,15 +17,17 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaMenuPrincipal.class.getName());
     private final GerenciarUsuarios telaGerenciarUsuarios;
+    private final SessaoService sessaoService;
     /**
      * Creates new form TelaMenuPrincipal
      */
-    public TelaMenuPrincipal(GerenciarUsuarios telaGerenciarUsuarios) {
-        this.telaGerenciarUsuarios = telaGerenciarUsuarios;
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        initComponents();
-    }
+    public TelaMenuPrincipal(GerenciarUsuarios telaGerenciarUsuarios, SessaoService sessaoService) {
+    this.telaGerenciarUsuarios = telaGerenciarUsuarios;
+    this.sessaoService = sessaoService; // Adicionado
+    this.setResizable(false);
+    this.setLocationRelativeTo(null);
+    initComponents();
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -106,6 +110,12 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
     private void mnuSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSairActionPerformed
         // TODO add your handling code here:
+        sessaoService.encerrarSessao();
+        // 2) Reabre a TelaLogin buscando do contexto do Spring
+        TelaLogin telaLogin = context.getBean(TelaLogin.class);
+        telaLogin.setVisible(true);
+        // 3) Fecha a tela atual do Menu Principal
+        this.dispose();
     }//GEN-LAST:event_mnuSairActionPerformed
 
     private void mnuCadUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCadUsuarioActionPerformed
