@@ -2,13 +2,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package br.com.ifba.usuario.view;
+package br.com.ifba.contribuinte.view;
 
-import br.com.ifba.usuario.controller.UsuarioIController;
+import br.com.ifba.contribuinte.controller.ContribuinteIController;
+import br.com.ifba.contribuinte.entity.Contribuinte;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.service.SessaoService;
 import java.util.List;
 import javax.swing.JOptionPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,33 +19,32 @@ import org.springframework.stereotype.Component;
  * @author eduardo
  */
 @Component
-public class GerenciarUsuarios extends javax.swing.JFrame {
+public class GerenciarContribuintes extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GerenciarUsuarios.class.getName());
-    private final UsuarioIController usuarioController;
-    private final TelaCadastroUsuario telaCadastro;
-    private final SessaoService sessaoService;
-
+    private static final Logger log = LoggerFactory.getLogger(GerenciarContribuintes.class);
  
-    public GerenciarUsuarios(UsuarioIController usuarioController, TelaCadastroUsuario telaCadastro, SessaoService sessaoService) {
-    this.usuarioController = usuarioController;
-    this.telaCadastro = telaCadastro;
-    this.sessaoService = sessaoService; 
-    this.setResizable(false);
-    this.setLocationRelativeTo(null);
-    initComponents();
-    carregarTabela();
-}
+    private final ContribuinteIController contribuinteController;
+    private final TelaCadastroContribuinte telaCadastro;
+ 
+    public GerenciarContribuintes(ContribuinteIController contribuinteController,
+                                   TelaCadastroContribuinte telaCadastro) {
+        this.contribuinteController = contribuinteController;
+        this.telaCadastro = telaCadastro;
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+        initComponents();
+        carregarTabela();
+    }
     
     public void carregarTabela() {
-    javax.swing.table.DefaultTableModel modelo = 
-        (javax.swing.table.DefaultTableModel) tblUsuarios.getModel();
-    modelo.setRowCount(0);
+        javax.swing.table.DefaultTableModel modelo = 
+            (javax.swing.table.DefaultTableModel) tblContribuintes.getModel();
+        modelo.setRowCount(0);
 
-    for (Usuario u : usuarioController.listarTodos()) {
-        modelo.addRow(new Object[]{u.getNome(), u.getLogin(), u.getNivelAcesso(), u.getId()});
+        for (Contribuinte c : contribuinteController.listarTodos()) {
+            modelo.addRow(new Object[]{c.getNome(), c.getEmail(), c.getEndereco(), c.getId(), c.getTelefone()});
+        }
     }
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,7 +61,7 @@ public class GerenciarUsuarios extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblUsuarios = new javax.swing.JTable();
+        tblContribuintes = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -80,7 +82,7 @@ public class GerenciarUsuarios extends javax.swing.JFrame {
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/trash.png"))); // NOI18N
         btnExcluir.addActionListener(this::btnExcluirActionPerformed);
 
-        tblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
+        tblContribuintes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -99,7 +101,7 @@ public class GerenciarUsuarios extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tblUsuarios);
+        jScrollPane1.setViewportView(tblContribuintes);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -159,96 +161,97 @@ public class GerenciarUsuarios extends javax.swing.JFrame {
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         // TODO add your handling code here:
-        int linha = tblUsuarios.getSelectedRow();
+        int linha = tblContribuintes.getSelectedRow();
         if (linha == -1) {
-            JOptionPane.showMessageDialog(this, "Selecione um usuário para excluir.");
+            JOptionPane.showMessageDialog(this,
+                    "Selecione um contribuinte na tabela para excluir.",
+                    "Nenhuma seleção", JOptionPane.WARNING_MESSAGE);
             return;
         }
-    
-        // 2. Coleta os dados exatos da linha selecionada (ID e Nível de Acesso)
-        Long id = (Long) tblUsuarios.getValueAt(linha, 3);
-        String nivelAlvo = (String) tblUsuarios.getValueAt(linha, 2); 
-    
-        // 3. Pega quem está logado no sistema neste exato momento
-        Usuario logado = sessaoService.getUsuarioLogado();
-
-        // 4. Bateria de Regras de Segurança da Interface
-        if (logado != null) {
-            // REGRA A: Funcionário simples não deleta Admin
-            if (!logado.getNivelAcesso().equals("ADMIN") && nivelAlvo.equals("ADMIN")) {
-                JOptionPane.showMessageDialog(this, 
-                    "Acesso Negado: Você não tem permissão para excluir um Administrador.", 
-                    "Erro de Permissão", JOptionPane.ERROR_MESSAGE);
-                return; // Para a execução do código aqui
-            }
-
-            // REGRA B: Ninguém pode se auto-excluir (Prevenção de inativação da sessão)
-            if (id.equals(logado.getId())) {
-                JOptionPane.showMessageDialog(this, 
-                    "Acesso Negado: Você não pode excluir sua própria conta enquanto estiver logado no sistema.", 
-                    "Ação Bloqueada", JOptionPane.WARNING_MESSAGE);
-                return; // Para a execução do código aqui
-            }
-        }
-
-        // 5. Se sobreviveu às regras de segurança, pede a confirmação final
-        int confirm = JOptionPane.showConfirmDialog(
-            this, "Tem certeza que deseja excluir permanentemente o usuário selecionado?", 
-            "Confirmação de Exclusão", JOptionPane.YES_NO_OPTION
+ 
+        Long   id   = (Long)   tblContribuintes.getValueAt(linha, 4);
+        String nome = (String) tblContribuintes.getValueAt(linha, 0);
+ 
+        int confirmacao = JOptionPane.showConfirmDialog(
+                this,
+                "Tem certeza que deseja excluir o contribuinte:\n\"" + nome + "\"?",
+                "Confirmar Exclusão",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
         );
-    
-        // 6. Envia o comando para o Controller / Banco de Dados
-        if (confirm == JOptionPane.YES_OPTION) {
+ 
+        if (confirmacao == JOptionPane.YES_OPTION) {
             try {
-                usuarioController.deletar(id); // O seu Service ainda vai validar se não é a conta "admin"
-                JOptionPane.showMessageDialog(this, "Usuário excluído com sucesso!");
-            
-                // Limpa o "fantasma" do clique na tabela e recarrega os dados
-                tblUsuarios.clearSelection(); 
+                contribuinteController.deletar(id);
+                JOptionPane.showMessageDialog(this,
+                        "Contribuinte excluído com sucesso!",
+                        "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                tblContribuintes.clearSelection();
                 carregarTabela();
-            
+ 
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro ao excluir", JOptionPane.ERROR_MESSAGE);
+                log.error("Erro ao excluir contribuinte ID {}: {}", id, ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ex.getMessage(),
+                        "Erro ao Excluir", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         
-        int linha = tblUsuarios.getSelectedRow();
+        int linha = tblContribuintes.getSelectedRow();
         if (linha == -1) {
-            JOptionPane.showMessageDialog(this, "Selecione um usuário para editar.");
+            JOptionPane.showMessageDialog(this,
+                    "Selecione um contribuinte na tabela para editar.",
+                    "Nenhuma seleção", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        String nome   = (String) tblUsuarios.getValueAt(linha, 0);
-        String login  = (String) tblUsuarios.getValueAt(linha, 1);
-        String nivel  = (String) tblUsuarios.getValueAt(linha, 2);
-        Long id       = (Long)   tblUsuarios.getValueAt(linha, 3);
-
+ 
+        Long id = (Long) tblContribuintes.getValueAt(linha, 4);
+ 
+        // Busca o objeto completo para obter também os dados de endereço,
+        // que não estão expostos como colunas da tabela
+        Contribuinte contribuinte = contribuinteController.buscarPorId(id);
+ 
         telaCadastro.setModo("EDITAR", id, this);
-        telaCadastro.preencherCampos(nome, login, nivel);
+        telaCadastro.preencherCampos(contribuinte);
         telaCadastro.setVisible(true);
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         String texto = txtBuscar.getText().trim();
+ 
         if (texto.isEmpty()) {
             carregarTabela();
             return;
         }
+ 
         javax.swing.table.DefaultTableModel modelo =
-            (javax.swing.table.DefaultTableModel) tblUsuarios.getModel();
+                (javax.swing.table.DefaultTableModel) tblContribuintes.getModel();
         modelo.setRowCount(0);
+ 
         try {
-            usuarioController.listarTodos().stream()
-                .filter(u -> u.getNome().toLowerCase().contains(texto.toLowerCase())
-                          || u.getLogin().toLowerCase().contains(texto.toLowerCase()))
-                .forEach(u -> modelo.addRow(new Object[]{
-                    u.getNome(), u.getLogin(), u.getNivelAcesso(), u.getId()
+            contribuinteController.listarTodos().stream()
+                .filter(c ->
+                    c.getNome().toLowerCase().contains(texto.toLowerCase()) ||
+                    c.getCpfCnpj().contains(texto)
+                )
+                .forEach(c -> modelo.addRow(new Object[]{
+                    c.getNome(), c.getCpfCnpj(), c.getTelefone(), c.getEmail(), c.getId()
                 }));
+ 
+            if (modelo.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Nenhum contribuinte encontrado para: \"" + texto + "\".",
+                        "Busca sem resultado", JOptionPane.INFORMATION_MESSAGE);
+            }
+ 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao buscar: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    "Erro ao buscar: " + ex.getMessage(),
+                    "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
@@ -262,7 +265,7 @@ public class GerenciarUsuarios extends javax.swing.JFrame {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblUsuarios;
+    private javax.swing.JTable tblContribuintes;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }
