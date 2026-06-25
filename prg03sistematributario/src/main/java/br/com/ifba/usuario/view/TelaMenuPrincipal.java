@@ -5,7 +5,10 @@
 package br.com.ifba.usuario.view;
 
 import static br.com.ifba.Application.context;
+import br.com.ifba.contribuinte.view.GerenciarContribuintes;
 import br.com.ifba.usuario.service.SessaoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,19 +18,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class TelaMenuPrincipal extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaMenuPrincipal.class.getName());
-    private final GerenciarUsuarios telaGerenciarUsuarios;
+    private static final Logger log = LoggerFactory.getLogger(TelaMenuPrincipal.class);    private final GerenciarUsuarios telaGerenciarUsuarios;
     private final SessaoService sessaoService;
+    private final GerenciarContribuintes telaGerenciarContribuintes;
     /**
      * Creates new form TelaMenuPrincipal
      */
-    public TelaMenuPrincipal(GerenciarUsuarios telaGerenciarUsuarios, SessaoService sessaoService) {
-    this.telaGerenciarUsuarios = telaGerenciarUsuarios;
-    this.sessaoService = sessaoService; // Adicionado
-    this.setResizable(false);
-    this.setLocationRelativeTo(null);
-    initComponents();
-}
+
+    //Construtor pika
+    public TelaMenuPrincipal(GerenciarUsuarios telaGerenciarUsuarios, GerenciarContribuintes telaGerenciarContribuintes, SessaoService sessaoService) {
+        this.telaGerenciarUsuarios     = telaGerenciarUsuarios;
+        this.telaGerenciarContribuintes = telaGerenciarContribuintes; // ← adicionar
+        this.sessaoService             = sessaoService;
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+        initComponents();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -68,6 +74,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         mnuCadastros.add(mnuCadUsuario);
 
         mnuCadContribuinte.setText("Gerenciar Contribuintes");
+        mnuCadContribuinte.addActionListener(this::mnuCadContribuinteActionPerformed);
         mnuCadastros.add(mnuCadContribuinte);
 
         mnuImovel.setText("Gerenciar Imóveis");
@@ -122,6 +129,12 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
             telaGerenciarUsuarios.setVisible(true);
     }//GEN-LAST:event_mnuCadUsuarioActionPerformed
+
+    private void mnuCadContribuinteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCadContribuinteActionPerformed
+        // TODO add your handling code here:
+        telaGerenciarContribuintes.carregarTabela(); // garante dados atualizadissimos já quando abre
+        telaGerenciarContribuintes.setVisible(true);
+    }//GEN-LAST:event_mnuCadContribuinteActionPerformed
 
     /**
      * @param args the command line arguments

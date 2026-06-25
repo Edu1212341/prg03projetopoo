@@ -42,9 +42,11 @@ public class GerenciarContribuintes extends javax.swing.JFrame {
         modelo.setRowCount(0);
 
         for (Contribuinte c : contribuinteController.listarTodos()) {
-            modelo.addRow(new Object[]{c.getNome(), c.getEmail(), c.getEndereco(), c.getId(), c.getTelefone()});
+            modelo.addRow(new Object[]{c.getNome(), c.getCpfCnpj(), c.getTelefone(), c.getEmail(), c.getId()});
         }
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -84,17 +86,17 @@ public class GerenciarContribuintes extends javax.swing.JFrame {
 
         tblContribuintes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Nome", "Login", "Nivel de Acesso", "ID"
+                "Nome", "CPF/CNPJ", "Telefone", "E-Mail", "ID"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
