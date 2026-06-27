@@ -5,13 +5,17 @@
 package br.com.ifba.contribuinte.entity;
 
 import br.com.ifba.contribuinte.entity.Endereco;
+import br.com.ifba.imovel.entity.Imovel;
 import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,8 +43,11 @@ public class Contribuinte extends PersistenceEntity {
     private String email;
     @Column (name = "Ativo", nullable = false)
     private Boolean ativo = true;
-
+    //relacionamento de 1 pra 1 para facilitar as buscas no bancos
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "endereco_id", referencedColumnName = "id")
     private Endereco endereco;
+    //relacionamento de 1 pra muitos para facilitar as buscas no bancos
+    @OneToMany(mappedBy = "contribuinte")
+    private List<Imovel> imoveis = new ArrayList<>();
 }
