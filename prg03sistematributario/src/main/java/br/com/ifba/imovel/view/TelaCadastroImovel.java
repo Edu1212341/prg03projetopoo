@@ -426,24 +426,47 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
             endereco.setEstado((String) cmbEstado.getSelectedItem());
             endereco.setCep(txtCep.getText());
  
-            // 3. Monta o objeto Imovel (Convertendo String para Double onde necessário)
+            // 3. Monta o objeto Imovel
             Imovel dados = new Imovel();
             dados.setInscricaoImobiliaria(txtInscricao.getText());
-            
-            // Usando Double.parseDouble para converter o texto em número
-            dados.setAreaTerreno(txtAreaTerreno.getText().isEmpty() ? 0.0 : Double.parseDouble(txtAreaTerreno.getText()));
-            dados.setAreaConstruida(txtAreaConstruida.getText().isEmpty() ? 0.0 : Double.parseDouble(txtAreaConstruida.getText()));
-            dados.setValorVenal(txtValorVenal.getText().isEmpty() ? 0.0 : Double.parseDouble(txtValorVenal.getText()));
             dados.setEndereco(endereco);
+            
+            // --- INÍCIO DOS IFS EXPANDIDOS PARA CONVERSÃO DE NÚMEROS ---
+            
+            // Área Terreno
+            if (txtAreaTerreno.getText().isEmpty()) {
+                dados.setAreaTerreno(0.0);
+            } else {
+                dados.setAreaTerreno(Double.parseDouble(txtAreaTerreno.getText()));
+            }
+
+            // Área Construída
+            if (txtAreaConstruida.getText().isEmpty()) {
+                dados.setAreaConstruida(0.0);
+            } else {
+                dados.setAreaConstruida(Double.parseDouble(txtAreaConstruida.getText()));
+            }
+
+            // Valor Venal
+            if (txtValorVenal.getText().isEmpty()) {
+                dados.setValorVenal(0.0);
+            } else {
+                dados.setValorVenal(Double.parseDouble(txtValorVenal.getText()));
+            }
+            
+            // --- FIM DAS CONVERSÕES ---
             
             // 4. Associa o Contribuinte ao Imóvel
             Contribuinte dono = contribuinteController.buscarPorId(itemSelecionado.getId());
             dados.setContribuinte(dono);
  
-            // 5. CAIXA DE CONFIRMAÇÃO ANTES DE SALVAR
-            String mensagem = modo.equals("EDITAR") ? 
-                    "Tem certeza que deseja salvar as alterações neste imóvel?" : 
-                    "Tem certeza que deseja cadastrar este novo imóvel?";
+            // 5. CAIXA DE CONFIRMAÇÃO ANTES DE SALVAR COM IF/ELSE
+            String mensagem;
+            if (modo.equals("EDITAR")) {
+                mensagem = "Tem certeza que deseja salvar as alterações neste imóvel?";
+            } else {
+                mensagem = "Tem certeza que deseja cadastrar este novo imóvel?";
+            }
             
             int resposta = JOptionPane.showConfirmDialog(
                     this, 
@@ -453,12 +476,12 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
                     JOptionPane.QUESTION_MESSAGE
             );
 
-            // Se o usuário clicar em "Não" (NO_OPTION) ou fechar a janela, a gente para por aqui
+            // Se o usuário clicar em "Não" (NO_OPTION) ou fechar a janela, cancelamos a ação
             if (resposta != JOptionPane.YES_OPTION) {
                 return; 
             }
 
-            // 6. Decide entre INSERT e UPDATE (Agora só roda se o usuário disse "Sim")
+            // 6. Decide entre INSERT e UPDATE
             if (modo.equals("EDITAR") && idEmEdicao != null) {
                 imovelController.atualizar(idEmEdicao, dados);
                 JOptionPane.showMessageDialog(this, "Imóvel atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
