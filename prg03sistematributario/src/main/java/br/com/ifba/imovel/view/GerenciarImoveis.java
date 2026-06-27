@@ -35,20 +35,39 @@ public class GerenciarImoveis extends javax.swing.JFrame {
     }
     
     public void carregarTabela(){
-        javax.swing.table.DefaultTableModel modelo = 
-            (javax.swing.table.DefaultTableModel) tblImoveis.getModel();
-        modelo.setRowCount(0);
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblImoveis.getModel();
+        modelo.setRowCount(0); // Limpa a tabela
 
-        for (Imovel i : imovelController.listarTodos()) {
-            // Mostrando o nome do contribuinte associado na tabela
-            String nomeDono = i.getContribuinte() != null ? i.getContribuinte().getNome() : "Sem dono";
-            
-            modelo.addRow(new Object[]{
-                i.getInscricaoImobiliaria(), 
-                nomeDono, 
-                i.getValorVenal(), 
-                i.getId()
-            });
+        try {
+            for (br.com.ifba.imovel.entity.Imovel i : imovelController.listarTodos()) {
+                
+                // 1. Verifica e pega o nome do dono
+                String nomeDono;
+                if (i.getContribuinte() != null) {
+                    nomeDono = i.getContribuinte().getNome();
+                } else {
+                    nomeDono = "Sem dono";
+                }
+                
+                // 2. Verifica e pega o bairro com segurança
+                String bairro;
+                if (i.getEndereco() != null && i.getEndereco().getBairro() != null) {
+                    bairro = i.getEndereco().getBairro();
+                } else {
+                    bairro = "-";
+                }
+                
+                // 3. Adiciona a linha na mesma ordem configurada no visual
+                modelo.addRow(new Object[]{
+                    i.getInscricaoImobiliaria(), // Coluna 1: Inscrição
+                    nomeDono,                    // Coluna 2: Contribuinte
+                    bairro,                      // Coluna 3: Bairro
+                    i.getValorVenal(),           // Coluna 4: Valor Venal
+                    i.getId()                    // Coluna 5: ID
+                });
+            }
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao carregar tabela: " + e.getMessage());
         }
     }
     /**
@@ -72,15 +91,23 @@ public class GerenciarImoveis extends javax.swing.JFrame {
 
         tblImoveis.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Inscrição", "Contribuinte", "Bairro", "Valor Venal", "ID"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tblImoveis);
 
         btnAdicionar.setText("Adicionar");
@@ -97,8 +124,6 @@ public class GerenciarImoveis extends javax.swing.JFrame {
 
         btnBuscar.setText("Buscar");
         btnBuscar.addActionListener(this::btnBuscarActionPerformed);
-
-        txtBuscar.setText("jTextField1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
