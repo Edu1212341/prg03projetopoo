@@ -7,11 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
 /**
- * Controller da entidade Contribuinte.
- * Delega 100% das responsabilidades para a camada de Service,
- * seguindo o mesmo padrão de UsuarioController.
+ *
+ * @author eduar
  */
-@Controller
 @RequiredArgsConstructor
 public class ContribuinteController implements ContribuinteIController {
 

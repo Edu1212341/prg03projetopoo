@@ -4,7 +4,8 @@ import br.com.ifba.contribuinte.entity.Contribuinte;
 import java.util.List;
 
 /**
- * Contrato de negócio para as operações de Contribuinte.
+ *
+ * @author eduar
  */
 public interface ContribuinteIService {
 

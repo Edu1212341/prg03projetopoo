@@ -8,7 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repositório JPA para a entidade Contribuinte.
+ *
+ * @author eduar
  */
 @Repository
 public interface ContribuinteRepository extends JpaRepository<Contribuinte, Long> {

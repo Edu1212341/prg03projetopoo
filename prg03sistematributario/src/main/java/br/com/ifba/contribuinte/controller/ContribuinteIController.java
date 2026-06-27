@@ -4,8 +4,8 @@ import br.com.ifba.contribuinte.entity.Contribuinte;
 import java.util.List;
 
 /**
- * Contrato de interface para o Controller de Contribuinte.
- * Espelho de UsuarioIController.
+ *
+ * @author eduar
  */
 public interface ContribuinteIController {
 

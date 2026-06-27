@@ -14,12 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
- * Camada de negócio para Imovel.
- * Segue o mesmo padrão de UsuarioService e ContribuinteService:
- *  - Validação centralizada em validarImovel()
- *  - Soft-delete via campo 'ativo'
- *  - IllegalArgumentException para erros de negócio
- *  - Busca o Contribuinte pelo ID antes de associar ao Imovel
+ *
+ * @author eduar
  */
 @Service
 @RequiredArgsConstructor

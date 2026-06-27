@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repositório JPA para a entidade Imovel.
+ *
+ * @author eduar
  */
 @Repository
 public interface ImovelRepository extends JpaRepository<Imovel, Long> {

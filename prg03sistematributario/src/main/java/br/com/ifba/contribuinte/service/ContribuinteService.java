@@ -12,15 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
- * Camada de negócio para Contribuinte.
  *
- * DECISÃO IMPORTANTE — atualizar() com Endereco como @Entity:
- * Como o Endereco agora é uma entidade gerenciada pelo JPA (tem seu próprio ID
- * e ciclo de vida), NÃO podemos simplesmente substituir o objeto com setEndereco().
- * Isso "abandonaria" o Endereco antigo no banco (registro órfão) e tentaria
- * inserir um novo objeto transiente, causando erro ou duplicidade.
- *
- * A solução correta é copiar os campos novos para o objeto já gerenciado (merge in-place).
+ * @author eduar
  */
 @Service
 @RequiredArgsConstructor

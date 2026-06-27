@@ -4,8 +4,8 @@ import br.com.ifba.imovel.entity.Imovel;
 import java.util.List;
 
 /**
- * Contrato de interface para o Controller de Imovel.
- * Espelho de ContribuinteIController e UsuarioIController.
+ *
+ * @author eduar
  */
 public interface ImovelIController {
 
