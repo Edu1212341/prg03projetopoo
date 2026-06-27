@@ -6,6 +6,7 @@ package br.com.ifba.usuario.view;
 
 import static br.com.ifba.Application.context;
 import br.com.ifba.contribuinte.view.GerenciarContribuintes;
+import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.service.SessaoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,6 +140,30 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+    public void setVisible(boolean visible) {
+        if (visible) {
+            configurarMenuPorPerfil();
+        }
+        super.setVisible(visible);
+    }
+
+    private void configurarMenuPorPerfil() {
+        Usuario logado = sessaoService.getUsuarioLogado();
+        
+        if (logado == null) {
+            // Segurança: se não há usuário logado, esconde tudo sensível
+            mnuCadUsuario.setVisible(false);
+            return;
+        }
+
+        if (logado.getNivelAcesso().equals("ADMIN")) {
+            // ADMIN enxerga o item de gerenciar usuários
+            mnuCadUsuario.setVisible(true);
+        } else {
+            // FISCAL e ATENDENTE não enxergam
+            mnuCadUsuario.setVisible(false);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar jMenuBar1;

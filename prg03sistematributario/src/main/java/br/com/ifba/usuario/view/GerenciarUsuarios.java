@@ -4,11 +4,14 @@
  */
 package br.com.ifba.usuario.view;
 
+import br.com.ifba.contribuinte.view.GerenciarContribuintes;
 import br.com.ifba.usuario.controller.UsuarioIController;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.service.SessaoService;
 import java.util.List;
 import javax.swing.JOptionPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,31 +21,50 @@ import org.springframework.stereotype.Component;
 @Component
 public class GerenciarUsuarios extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GerenciarUsuarios.class.getName());
+     private static final Logger log = LoggerFactory.getLogger(GerenciarUsuarios.class);
     private final UsuarioIController usuarioController;
     private final TelaCadastroUsuario telaCadastro;
     private final SessaoService sessaoService;
 
  
     public GerenciarUsuarios(UsuarioIController usuarioController, TelaCadastroUsuario telaCadastro, SessaoService sessaoService) {
-    this.usuarioController = usuarioController;
-    this.telaCadastro = telaCadastro;
-    this.sessaoService = sessaoService; 
-    this.setResizable(false);
-    this.setLocationRelativeTo(null);
-    initComponents();
-    carregarTabela();
-}
+        this.usuarioController = usuarioController;
+        this.telaCadastro = telaCadastro;
+        this.sessaoService = sessaoService; 
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+        initComponents();
+    }   
     
     public void carregarTabela() {
-    javax.swing.table.DefaultTableModel modelo = 
-        (javax.swing.table.DefaultTableModel) tblUsuarios.getModel();
-    modelo.setRowCount(0);
+        javax.swing.table.DefaultTableModel modelo = 
+            (javax.swing.table.DefaultTableModel) tblUsuarios.getModel();
+        modelo.setRowCount(0);
 
-    for (Usuario u : usuarioController.listarTodos()) {
-        modelo.addRow(new Object[]{u.getNome(), u.getLogin(), u.getNivelAcesso(), u.getId()});
+        for (Usuario u : usuarioController.listarTodos()) {
+            modelo.addRow(new Object[]{u.getNome(), u.getLogin(), u.getNivelAcesso(), u.getId()});
+        }
     }
-}
+    
+    @Override
+    public void setVisible(boolean visible) {
+        if (visible) {
+            Usuario logado = sessaoService.getUsuarioLogado();
+            
+            if (logado == null || !"ADMIN".equals(logado.getNivelAcesso())) {
+                JOptionPane.showMessageDialog(
+                    null,
+                    "Acesso Negado: apenas Administradores podem gerenciar usuários do sistema.",
+                    "Permissão Insuficiente",
+                    JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+            
+            carregarTabela();
+        }
+        super.setVisible(visible);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

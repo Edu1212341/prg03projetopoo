@@ -41,7 +41,7 @@ public class Imovel extends PersistenceEntity {
     @Column(nullable = false)
     private Double areaConstruida;
 
-    @Column(nullable = false)
+    @Column(name = "valor_venal", nullable = false)
     private Double valorVenal;
 
     @Column(nullable = false)
@@ -71,6 +71,7 @@ public class Imovel extends PersistenceEntity {
      * legislação municipal vigente.
      */
     public Double calcularValorVenal() {
+        //calculo de valor venal
         double valorM2Terreno    = 500.0;  // R$ por m² de terreno
         double valorM2Construcao = 800.0;  // R$ por m² construído
         return (this.areaTerreno * valorM2Terreno) + (this.areaConstruida * valorM2Construcao);
