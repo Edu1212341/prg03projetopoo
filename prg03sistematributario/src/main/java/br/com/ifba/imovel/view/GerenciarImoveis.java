@@ -10,11 +10,13 @@ import br.com.ifba.imovel.entity.Imovel;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author eduar
  */
+@Component
 public class GerenciarImoveis extends javax.swing.JFrame {
     
      private static final Logger log = LoggerFactory.getLogger(GerenciarImoveis.class);
@@ -101,7 +103,7 @@ public class GerenciarImoveis extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -149,12 +151,13 @@ public class GerenciarImoveis extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(8, 8, 8)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                    .addComponent(btnAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
                 .addGap(15, 15, 15))
@@ -179,7 +182,7 @@ public class GerenciarImoveis extends javax.swing.JFrame {
             return;
         }
  
-        Long   id                 = (Long)   tblImoveis.getValueAt(linha, 3);
+        Long   id                 = (Long)   tblImoveis.getValueAt(linha, 4);
         String inscricao          = (String) tblImoveis.getValueAt(linha, 0);
  
         int confirmacao = JOptionPane.showConfirmDialog(
@@ -212,13 +215,11 @@ public class GerenciarImoveis extends javax.swing.JFrame {
         // TODO add your handling code here:
         int linha = tblImoveis.getSelectedRow();
         if (linha == -1) {
-            JOptionPane.showMessageDialog(this,
-                    "Selecione um imóvel na tabela para editar.",
-                    "Nenhuma seleção", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,"Selecione um imóvel na tabela para editar.","Nenhuma seleção", JOptionPane.WARNING_MESSAGE);
             return;
         }
  
-        Long id = (Long) tblImoveis.getValueAt(linha, 3);
+        Long id = (Long) tblImoveis.getValueAt(linha, 4);
  
         // Busca o objeto completo para obter endereço e contribuinte,
         // que não estão totalmente expostos nas colunas da tabela
@@ -232,41 +233,75 @@ public class GerenciarImoveis extends javax.swing.JFrame {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         String texto = txtBuscar.getText().trim();
- 
+
         if (texto.isEmpty()) {
             carregarTabela();
             return;
         }
- 
-        javax.swing.table.DefaultTableModel modelo =
+
+        javax.swing.table.DefaultTableModel modelo = 
                 (javax.swing.table.DefaultTableModel) tblImoveis.getModel();
         modelo.setRowCount(0);
- 
+
         try {
-            imovelController.listarTodos().stream()
-                .filter(i ->
-                    i.getInscricaoImobiliaria().toLowerCase().contains(texto.toLowerCase()) ||
-                    (i.getContribuinte() != null &&
-                     i.getContribuinte().getNome().toLowerCase().contains(texto.toLowerCase()))
-                )
-                .forEach(i -> {
-                    String nomeContribuinte = i.getContribuinte() != null
-                            ? i.getContribuinte().getNome()
-                            : "Sem contribuinte";
+            // Pegamos a lista completa de imóveis (usando 'var' para inferir o tipo da sua classe)
+            var listaDeImoveis = imovelController.listarTodos();
+
+            // Substituímos o .stream().forEach() por um laço 'for' tradicional
+            for (var i : listaDeImoveis) {
+        
+                // 1. Expandindo a lógica do .filter()
+                boolean correspondeABusca = false;
+
+                // Verifica se o texto digitado está na inscrição imobiliária
+                if (i.getInscricaoImobiliaria().toLowerCase().contains(texto.toLowerCase())) {
+                    correspondeABusca = true;
+                }
+
+                // Verifica se o texto digitado está no nome do contribuinte
+                if (i.getContribuinte() != null) {
+                    if (i.getContribuinte().getNome().toLowerCase().contains(texto.toLowerCase())) {
+                        correspondeABusca = true;
+                    }
+                }
+
+                // Se o imóvel bateu com alguma das condições acima, preparamos os dados
+                if (correspondeABusca) {
+            
+                    // 2. Expandindo o ternário do Contribuinte
+                    String nomeContribuinte;
+                    if (i.getContribuinte() != null) {
+                        nomeContribuinte = i.getContribuinte().getNome();
+                    } else {
+                        nomeContribuinte = "Sem contribuinte";
+                    }
+
+                    // 3. A lógica do Bairro (que já havíamos expandido)
+                    String bairro;
+                    if (i.getEndereco() != null) {
+                        bairro = i.getEndereco().getBairro();
+                    } else {
+                        bairro = "-";
+                    }
+
+                    // 4. Finalmente, adicionamos a linha na tabela
                     modelo.addRow(new Object[]{
                         i.getInscricaoImobiliaria(),
                         nomeContribuinte,
+                        bairro,
                         i.getValorVenal(),
                         i.getId()
                     });
-                });
- 
+                }
+            }
+
+            // Se o laço terminou e nenhuma linha foi adicionada
             if (modelo.getRowCount() == 0) {
                 JOptionPane.showMessageDialog(this,
                         "Nenhum imóvel encontrado para: \"" + texto + "\".",
                         "Busca sem resultado", JOptionPane.INFORMATION_MESSAGE);
             }
- 
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
                     "Erro ao buscar: " + ex.getMessage(),

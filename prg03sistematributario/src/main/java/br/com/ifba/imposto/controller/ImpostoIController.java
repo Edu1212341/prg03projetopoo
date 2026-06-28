@@ -6,11 +6,13 @@ package br.com.ifba.imposto.controller;
 
 import br.com.ifba.imposto.entity.Imposto;
 import java.util.List;
+import org.springframework.stereotype.Controller;
 
 /**
  *
  * @author eduar
  */
+@Controller
 public interface ImpostoIController {
     Imposto salvar(Imposto imposto);
     Imposto atualizar(Long id, Imposto imposto);

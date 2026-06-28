@@ -29,21 +29,21 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="139" max="-2" attributes="0"/>
-                              <Component id="btnSalvar" min="-2" pref="96" max="-2" attributes="0"/>
-                              <EmptySpace pref="183" max="32767" attributes="0"/>
-                              <Component id="btnCancelar" min="-2" max="-2" attributes="0"/>
-                          </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="lblNivel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="cmbNivel" max="32767" attributes="0"/>
+                              <Component id="cmbNivel" pref="366" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="lblSenha" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="pswSenha" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="110" max="-2" attributes="0"/>
+                              <Component id="btnSalvar" min="-2" pref="134" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="btnCancelar" min="-2" pref="134" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -65,7 +65,7 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="155" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="146" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -95,8 +95,8 @@
               </Group>
               <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnSalvar" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>
-                  <Component id="btnCancelar" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>
+                  <Component id="btnSalvar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
           </Group>
@@ -152,6 +152,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnCancelar">
       <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/Images/cancelar.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="CANCELAR"/>
       </Properties>
       <Events>
@@ -160,6 +163,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnSalvar">
       <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/Images/salve-.png"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="SALVAR"/>
       </Properties>
       <Events>
