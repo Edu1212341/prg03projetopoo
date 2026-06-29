@@ -173,13 +173,13 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
         lblInscricaoImobiliaria.setText("Inscrição Imobiliaria:");
 
         lblAreaConstruida.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        lblAreaConstruida.setText("Area Construida: ");
+        lblAreaConstruida.setText("Area Construida (m²) : ");
 
         lblAreaTerreno.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        lblAreaTerreno.setText("Area do Terreno:");
+        lblAreaTerreno.setText("Area do Terreno (m²):");
 
         lblValorVenal.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        lblValorVenal.setText("Valor Venal: ");
+        lblValorVenal.setText("Valor Venal (R$) : ");
 
         lblSubTitulo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblSubTitulo.setText("Campos de endereço");
@@ -268,9 +268,16 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
                                         .addComponent(lblSeta, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(37, 37, 37)
-                                        .addComponent(lblAreaTerreno)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txtAreaTerreno, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lblInscricaoImobiliaria)
+                                            .addComponent(lblAreaTerreno))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(txtAreaTerreno, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addGap(12, 12, 12)
+                                                .addComponent(txtInscricao, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(lblValorVenal)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -310,13 +317,7 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
                                         .addComponent(txtAreaConstruida, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblContribuinte)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblInscricaoImobiliaria)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtInscricao, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(37, 37, 37)))
+                                .addComponent(lblContribuinte)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cmbContribuinte, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(99, 99, 99)))

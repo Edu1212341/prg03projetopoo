@@ -6,6 +6,8 @@ package br.com.ifba.usuario.view;
 
 import static br.com.ifba.Application.context;
 import br.com.ifba.contribuinte.view.GerenciarContribuintes;
+import br.com.ifba.imovel.view.GerenciarImoveis;
+import br.com.ifba.imposto.view.GerenciarImpostos;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.service.SessaoService;
 import org.slf4j.Logger;
@@ -22,14 +24,18 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
     private static final Logger log = LoggerFactory.getLogger(TelaMenuPrincipal.class);    private final GerenciarUsuarios telaGerenciarUsuarios;
     private final SessaoService sessaoService;
     private final GerenciarContribuintes telaGerenciarContribuintes;
+    private final GerenciarImoveis telaGerenciarImoveis;
+    private final GerenciarImpostos  telaGerenciarImpostos; 
     /**
      * Creates new form TelaMenuPrincipal
      */
 
     //Construtor pika
-    public TelaMenuPrincipal(GerenciarUsuarios telaGerenciarUsuarios, GerenciarContribuintes telaGerenciarContribuintes, SessaoService sessaoService) {
+    public TelaMenuPrincipal(GerenciarUsuarios telaGerenciarUsuarios, GerenciarContribuintes telaGerenciarContribuintes, SessaoService sessaoService, GerenciarImoveis telaGerenciarImoveis, GerenciarImpostos  telaGerenciarImpostos) {
         this.telaGerenciarUsuarios     = telaGerenciarUsuarios;
-        this.telaGerenciarContribuintes = telaGerenciarContribuintes; // ← adicionar
+        this.telaGerenciarContribuintes = telaGerenciarContribuintes;
+        this.telaGerenciarImoveis = telaGerenciarImoveis;
+        this.telaGerenciarImpostos = telaGerenciarImpostos;
         this.sessaoService             = sessaoService;
         this.setResizable(false);
         this.setLocationRelativeTo(null);
@@ -55,6 +61,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         mnuTributos = new javax.swing.JMenu();
         mnuEmissao = new javax.swing.JMenuItem();
         mnuConsulta = new javax.swing.JMenuItem();
+        mnuGerenciarImpostos = new javax.swing.JMenuItem();
         mnuAjuda = new javax.swing.JMenu();
         mnuSobre = new javax.swing.JMenuItem();
 
@@ -79,6 +86,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         mnuCadastros.add(mnuCadContribuinte);
 
         mnuImovel.setText("Gerenciar Imóveis");
+        mnuImovel.addActionListener(this::mnuImovelActionPerformed);
         mnuCadastros.add(mnuImovel);
 
         jMenuBar1.add(mnuCadastros);
@@ -90,6 +98,10 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
         mnuConsulta.setText("Consulta Débitos");
         mnuTributos.add(mnuConsulta);
+
+        mnuGerenciarImpostos.setText("GerenciarImpostos");
+        mnuGerenciarImpostos.addActionListener(this::mnuGerenciarImpostosActionPerformed);
+        mnuTributos.add(mnuGerenciarImpostos);
 
         jMenuBar1.add(mnuTributos);
 
@@ -137,6 +149,16 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         telaGerenciarContribuintes.setVisible(true);
     }//GEN-LAST:event_mnuCadContribuinteActionPerformed
 
+    private void mnuImovelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuImovelActionPerformed
+        // TODO add your handling code here:
+        telaGerenciarImoveis.setVisible(true);
+    }//GEN-LAST:event_mnuImovelActionPerformed
+
+    private void mnuGerenciarImpostosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuGerenciarImpostosActionPerformed
+        // TODO add your handling code here:
+        telaGerenciarImpostos.setVisible(true);
+    }//GEN-LAST:event_mnuGerenciarImpostosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -173,6 +195,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu mnuCadastros;
     private javax.swing.JMenuItem mnuConsulta;
     private javax.swing.JMenuItem mnuEmissao;
+    private javax.swing.JMenuItem mnuGerenciarImpostos;
     private javax.swing.JMenuItem mnuImovel;
     private javax.swing.JMenuItem mnuSair;
     private javax.swing.JMenu mnuSistema;

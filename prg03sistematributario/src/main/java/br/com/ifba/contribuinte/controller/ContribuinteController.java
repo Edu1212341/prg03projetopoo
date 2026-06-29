@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
  *
  * @author eduar
  */
+@Controller
 @RequiredArgsConstructor
 public class ContribuinteController implements ContribuinteIController {
 

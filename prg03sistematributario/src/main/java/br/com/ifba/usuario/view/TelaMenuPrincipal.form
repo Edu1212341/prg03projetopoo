@@ -44,6 +44,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Gerenciar Im&#xf3;veis"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuImovelActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -61,6 +64,14 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Consulta D&#xe9;bitos"/>
               </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mnuGerenciarImpostos">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="GerenciarImpostos"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuGerenciarImpostosActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
