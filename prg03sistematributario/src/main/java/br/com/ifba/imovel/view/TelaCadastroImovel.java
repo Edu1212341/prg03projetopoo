@@ -88,6 +88,7 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
                     break;
                 }
             }
+            
         }
  
         // Preenche os campos de endereço
@@ -192,6 +193,9 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
 
         txtAreaConstruida.addActionListener(this::txtAreaConstruidaActionPerformed);
 
+        txtValorVenal.setEditable(false);
+        txtValorVenal.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        txtValorVenal.setText("***AUTOMÁTICO***");
         txtValorVenal.addActionListener(this::txtValorVenalActionPerformed);
 
         lblNome1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
@@ -449,11 +453,7 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
             }
 
             // Valor Venal
-            if (txtValorVenal.getText().isEmpty()) {
-                dados.setValorVenal(0.0);
-            } else {
-                dados.setValorVenal(Double.parseDouble(txtValorVenal.getText()));
-            }
+            dados.setValorVenal(dados.calcularValorVenal());
             
             // --- FIM DAS CONVERSÕES ---
             
@@ -482,7 +482,7 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
                 return; 
             }
 
-            // 6. Decide entre INSERT e UPDATE
+            //  Decide entre Salvar e Atualizar
             if (modo.equals("EDITAR") && idEmEdicao != null) {
                 imovelController.atualizar(idEmEdicao, dados);
                 JOptionPane.showMessageDialog(this, "Imóvel atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);

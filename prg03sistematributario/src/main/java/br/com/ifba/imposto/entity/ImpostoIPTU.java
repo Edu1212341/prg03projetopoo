@@ -36,11 +36,11 @@ public class ImpostoIPTU extends Imposto {
     public Double calcularImposto(Imovel imovel) {
         
         // O método calcularValorVenal() já foi definido na classe Imovel!
-        Double valorVenalTotal = imovel.getValorVenal();
+        Double valorVenalTotal = imovel.calcularValorVenal();
         
         Double valorImpostoFinal;
 
-        // 2. REGRA DE NEGÓCIO DA PREFEITURA
+        // REGRA DE NEGÓCIO DA PREFEITURA
         // Verifica se o imóvel possui alguma construção
         if (imovel.getAreaConstruida() > 0.0) {
             
@@ -59,7 +59,7 @@ public class ImpostoIPTU extends Imposto {
             // Aplica a taxa maior (punição por lote vazio) sobre o valor total do terreno
             valorImpostoFinal = valorVenalTotal * taxaTerreno;
         }
-        // 3. Retorna o valor em Reais (R$) que vai sair impresso no boleto do contribuinte
+        // Retorna o valor em reais que vai sair impresso no boleto do contribuinte
         return valorImpostoFinal;
     }
 }
