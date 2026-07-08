@@ -119,7 +119,7 @@ public class TelaCadastroContribuinte extends javax.swing.JFrame {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblTitulo.setBackground(new java.awt.Color(204, 204, 255));
         lblTitulo.setFont(new java.awt.Font("Inter Black", 0, 24)); // NOI18N
