@@ -122,7 +122,7 @@ public class TelaLogin extends javax.swing.JFrame {
 
         try {
             // controller chega
-            Usuario user = usuarioController.autenticar(login, senha);
+            Usuario user = usuarioController.authenticate(login, senha);
 
             // se deu bom é porque logou
             JOptionPane.showMessageDialog(this, "Login efetuado com sucesso!");

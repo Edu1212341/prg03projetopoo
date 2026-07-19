@@ -30,7 +30,7 @@ public class ImovelService implements ImovelIService {
     // SALVAR
     // -------------------------------------------------------------------------
     @Override
-    public Imovel salvar(Imovel imovel) {
+    public Imovel save(Imovel imovel) {
         log.info("Iniciando o processo de salvar Imovel.");
         validarImovel(imovel);
 
@@ -53,10 +53,10 @@ public class ImovelService implements ImovelIService {
     // ATUALIZAR
     // -------------------------------------------------------------------------
     @Override
-    public Imovel atualizar(Long id, Imovel dadosNovos) {
+    public Imovel update(Long id, Imovel dadosNovos) {
         log.info("Iniciando processo de atualização de Imovel para o ID: {}", id);
 
-        Imovel imovelExistente = buscarPorId(id);
+        Imovel imovelExistente = findById(id);
 
         // Verifica unicidade da nova inscrição imobiliária (ignora o próprio registro)
         Optional<Imovel> duplicado =
@@ -104,7 +104,7 @@ public class ImovelService implements ImovelIService {
     // BUSCAR POR ID
     // -------------------------------------------------------------------------
     @Override
-    public Imovel buscarPorId(Long id) {
+    public Imovel findById(Long id) {
         log.info("Buscando Imovel de ID: {}.", id);
 
         return imovelRepository.findById(id)
@@ -115,7 +115,7 @@ public class ImovelService implements ImovelIService {
     // LISTAR TODOS (apenas ativos)
     // -------------------------------------------------------------------------
     @Override
-    public List<Imovel> listarTodos() {
+    public List<Imovel> findByAtivoTrue() {
         log.info("Listando todos os Imóveis ativos.");
         return imovelRepository.findByAtivoTrue();
     }
@@ -124,7 +124,7 @@ public class ImovelService implements ImovelIService {
     // LISTAR POR CONTRIBUINTE
     // -------------------------------------------------------------------------
     @Override
-    public List<Imovel> listarPorContribuinte(Long contribuinteId) {
+    public List<Imovel> findByContribuinteIdAndAtivoTrue(Long contribuinteId) {
         log.info("Listando imóveis ativos do Contribuinte ID: {}", contribuinteId);
         return imovelRepository.findByContribuinteIdAndAtivoTrue(contribuinteId);
     }
@@ -141,7 +141,7 @@ public class ImovelService implements ImovelIService {
             throw new IllegalArgumentException("O ID do imóvel é inválido.");
         }
 
-        Imovel imovel = buscarPorId(id);
+        Imovel imovel = findById(id);
         imovel.setAtivo(false);
         imovelRepository.save(imovel);
 

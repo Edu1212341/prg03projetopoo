@@ -9,9 +9,9 @@ import java.util.List;
  */
 public interface ContribuinteIService {
 
-    Contribuinte salvar(Contribuinte contribuinte);
-    Contribuinte atualizar(Long id, Contribuinte contribuinte);
-    Contribuinte buscarPorId(Long id);
-    List<Contribuinte> listarTodos();
-    void deletar(Long id);
+    Contribuinte save(Contribuinte contribuinte);
+    Contribuinte update(Long id, Contribuinte contribuinte);
+    Contribuinte findById(Long id);
+    List<Contribuinte> findByAtivoTrue();
+    void delete(Long id);
 }

@@ -12,10 +12,10 @@ import java.util.List;
  * @author eduardo
  */
 public interface UsuarioIService {
-    Usuario salvar(Usuario usuario);  
-    Usuario atualizar(Long id, Usuario usuario);
-    Usuario buscarPorId(Long id);
-    List<Usuario> listarTodos();
-    void deletar(Long id);
-    public Usuario autenticar(String login, String senha);
+    Usuario save(Usuario usuario);  
+    Usuario update(Long id, Usuario usuario);
+    Usuario findById(Long id);
+    List<Usuario> findByAtivoTrue();
+    void delete(Long id);
+    Usuario authenticate(String login, String senha);
 }

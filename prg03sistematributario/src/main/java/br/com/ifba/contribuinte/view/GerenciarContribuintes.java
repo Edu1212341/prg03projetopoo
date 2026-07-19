@@ -41,7 +41,7 @@ public class GerenciarContribuintes extends javax.swing.JFrame {
             (javax.swing.table.DefaultTableModel) tblContribuintes.getModel();
         modelo.setRowCount(0);
 
-        for (Contribuinte c : contribuinteController.listarTodos()) {
+        for (Contribuinte c : contribuinteController.findByAtivoTrue()) {
             modelo.addRow(new Object[]{c.getNome(), c.getCpfCnpj(), c.getTelefone(), c.getEmail(), c.getId()});
         }
     }
@@ -184,7 +184,7 @@ public class GerenciarContribuintes extends javax.swing.JFrame {
  
         if (confirmacao == JOptionPane.YES_OPTION) {
             try {
-                contribuinteController.deletar(id);
+                contribuinteController.delete(id);
                 JOptionPane.showMessageDialog(this,
                         "Contribuinte excluído com sucesso!",
                         "Sucesso", JOptionPane.INFORMATION_MESSAGE);
@@ -214,7 +214,7 @@ public class GerenciarContribuintes extends javax.swing.JFrame {
  
         // Busca o objeto completo para obter também os dados de endereço,
         // que não estão expostos como colunas da tabela
-        Contribuinte contribuinte = contribuinteController.buscarPorId(id);
+        Contribuinte contribuinte = contribuinteController.findById(id);
  
         telaCadastro.setModo("EDITAR", id, this);
         telaCadastro.preencherCampos(contribuinte);
@@ -235,7 +235,7 @@ public class GerenciarContribuintes extends javax.swing.JFrame {
         modelo.setRowCount(0);
  
         try {
-            contribuinteController.listarTodos().stream()
+            contribuinteController.findByAtivoTrue().stream()
                 .filter(c ->
                     c.getNome().toLowerCase().contains(texto.toLowerCase()) ||
                     c.getCpfCnpj().contains(texto)

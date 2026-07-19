@@ -17,27 +17,27 @@ public class ContribuinteController implements ContribuinteIController {
     private final ContribuinteIService contribuinteService;
 
     @Override
-    public Contribuinte salvar(Contribuinte contribuinte) {
-        return contribuinteService.salvar(contribuinte);
+    public Contribuinte save(Contribuinte contribuinte) {
+        return contribuinteService.save(contribuinte);
     }
 
     @Override
-    public Contribuinte atualizar(Long id, Contribuinte contribuinte) {
-        return contribuinteService.atualizar(id, contribuinte);
+    public Contribuinte update(Long id, Contribuinte contribuinte) {
+        return contribuinteService.update(id, contribuinte);
     }
 
     @Override
-    public Contribuinte buscarPorId(Long id) {
-        return contribuinteService.buscarPorId(id);
+    public Contribuinte findById(Long id) {
+        return contribuinteService.findById(id);
     }
 
     @Override
-    public List<Contribuinte> listarTodos() {
-        return contribuinteService.listarTodos();
+    public List<Contribuinte> findByAtivoTrue() {
+        return contribuinteService.findByAtivoTrue();
     }
 
     @Override
-    public void deletar(Long id) {
-        contribuinteService.deletar(id);
+    public void delete(Long id) {
+        contribuinteService.delete(id);
     }
 }

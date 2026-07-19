@@ -21,27 +21,27 @@ public class ImpostoController implements ImpostoIController {
     private final ImpostoIService impostoService;
 
     @Override
-    public Imposto salvar(Imposto imposto) {
-        return impostoService.salvar(imposto);
+    public Imposto save(Imposto imposto) {
+        return impostoService.save(imposto);
     }
 
     @Override
-    public Imposto atualizar(Long id, Imposto imposto) {
-        return impostoService.atualizar(id, imposto);
+    public Imposto update(Long id, Imposto imposto) {
+        return impostoService.update(id, imposto);
     }
 
     @Override
-    public Imposto buscarPorId(Long id) {
-        return impostoService.buscarPorId(id);
+    public Imposto findById(Long id) {
+        return impostoService.findById(id);
     }
 
     @Override
-    public List<Imposto> listarTodos() {
-        return impostoService.listarTodos();
+    public List<Imposto> findByAtivoTrue() {
+        return impostoService.findByAtivoTrue();
     }
 
     @Override
-    public void deletar(Long id) {
-        impostoService.deletar(id);
+    public void delete(Long id) {
+        impostoService.delete(id);
     }
 }

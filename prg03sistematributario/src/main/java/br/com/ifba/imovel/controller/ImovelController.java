@@ -18,32 +18,32 @@ public class ImovelController implements ImovelIController {
     private final ImovelIService imovelService;
 
     @Override
-    public Imovel salvar(Imovel imovel) {
-        return imovelService.salvar(imovel);
+    public Imovel save(Imovel imovel) {
+        return imovelService.save(imovel);
     }
 
     @Override
-    public Imovel atualizar(Long id, Imovel imovel) {
-        return imovelService.atualizar(id, imovel);
+    public Imovel update(Long id, Imovel imovel) {
+        return imovelService.update(id, imovel);
     }
 
     @Override
-    public Imovel buscarPorId(Long id) {
-        return imovelService.buscarPorId(id);
+    public Imovel findById(Long id) {
+        return imovelService.findById(id);
     }
 
     @Override
-    public List<Imovel> listarTodos() {
-        return imovelService.listarTodos();
+    public List<Imovel> findByAtivoTrue() {
+        return imovelService.findByAtivoTrue();
     }
 
     @Override
-    public List<Imovel> listarPorContribuinte(Long contribuinteId) {
-        return imovelService.listarPorContribuinte(contribuinteId);
+    public List<Imovel> findByContribuinteIdAndAtivoTrue(Long contribuinteId) {
+        return imovelService.findByContribuinteIdAndAtivoTrue(contribuinteId);
     }
 
     @Override
-    public void deletar(Long id) {
+    public void delete(Long id) {
         imovelService.deletar(id);
     }
 }

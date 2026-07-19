@@ -5,9 +5,13 @@
 package br.com.ifba.usuario.entity;
 
 import br.com.ifba.infrastructure.entity.PersistenceEntity;
+import br.com.ifba.pagamento.entity.Pagamento;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,4 +44,7 @@ public class Usuario extends PersistenceEntity {
     
     @Column (name = "Ativo", nullable = false, columnDefinition = "boolean default true")
     private Boolean ativo = true;
+    
+    @OneToMany(mappedBy = "usuario")
+    private List<Pagamento> pagamentos = new ArrayList<>();
 }

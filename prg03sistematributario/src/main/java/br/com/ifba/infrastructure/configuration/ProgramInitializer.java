@@ -29,7 +29,7 @@ public class ProgramInitializer implements CommandLineRunner {//implementar essa
         
         try {
             // Tenta listar. Se o Service der erro por estar vazio, ele pula para o 'catch'
-            usuarioController.listarTodos();
+            usuarioController.findByAtivoTrue();
             log.info("O banco de dados já possui usuários. Nenhuma ação necessária.");
             
         } catch (IllegalArgumentException e) {
@@ -42,7 +42,7 @@ public class ProgramInitializer implements CommandLineRunner {//implementar essa
             admin.setSenha("admin123");
             admin.setNivelAcesso("ADMIN");
             
-            usuarioController.salvar(admin);
+            usuarioController.save(admin);
             log.info("Administrador criado com sucesso!");
         }
     }

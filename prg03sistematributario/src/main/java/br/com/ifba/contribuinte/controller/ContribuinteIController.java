@@ -9,13 +9,13 @@ import java.util.List;
  */
 public interface ContribuinteIController {
 
-    Contribuinte salvar(Contribuinte contribuinte);
+    Contribuinte save(Contribuinte contribuinte);
 
-    Contribuinte atualizar(Long id, Contribuinte contribuinte);
+    Contribuinte update(Long id, Contribuinte contribuinte);
 
-    Contribuinte buscarPorId(Long id);
+    Contribuinte findById(Long id);
 
-    List<Contribuinte> listarTodos();
+    List<Contribuinte> findByAtivoTrue();
 
-    void deletar(Long id);
+    void delete(Long id);
 }

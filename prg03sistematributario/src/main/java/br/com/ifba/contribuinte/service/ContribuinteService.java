@@ -27,7 +27,7 @@ public class ContribuinteService implements ContribuinteIService {
     // SALVAR
     // -------------------------------------------------------------------------
     @Override
-    public Contribuinte salvar(Contribuinte contribuinte) {
+    public Contribuinte save(Contribuinte contribuinte) {
         log.info("Iniciando o processo de salvar Contribuinte.");
         validarContribuinte(contribuinte);
 
@@ -44,10 +44,10 @@ public class ContribuinteService implements ContribuinteIService {
     // ATUALIZAR
     // -------------------------------------------------------------------------
     @Override
-    public Contribuinte atualizar(Long id, Contribuinte dadosNovos) {
+    public Contribuinte update(Long id, Contribuinte dadosNovos) {
         log.info("Iniciando processo de atualização de Contribuinte para o ID: {}", id);
 
-        Contribuinte contribuinteExistente = buscarPorId(id);
+        Contribuinte contribuinteExistente = findById(id);
 
         // Verifica unicidade do CPF/CNPJ novo (ignora o próprio registro)
         Optional<Contribuinte> duplicado = contribuinteRepository.findByCpfCnpj(dadosNovos.getCpfCnpj());
@@ -87,7 +87,7 @@ public class ContribuinteService implements ContribuinteIService {
     // BUSCAR POR ID
     // -------------------------------------------------------------------------
     @Override
-    public Contribuinte buscarPorId(Long id) {
+    public Contribuinte findById(Long id) {
         log.info("Buscando Contribuinte de ID: {}.", id);
 
         return contribuinteRepository.findById(id)
@@ -98,7 +98,7 @@ public class ContribuinteService implements ContribuinteIService {
     // DELETAR (soft-delete)
     // -------------------------------------------------------------------------
     @Override
-    public void deletar(Long id) {
+    public void delete(Long id) {
         log.info("Iniciando a INATIVAÇÃO do Contribuinte ID: {}", id);
 
         if (id == null || id <= 0) {
@@ -106,7 +106,7 @@ public class ContribuinteService implements ContribuinteIService {
             throw new IllegalArgumentException("O ID do contribuinte é inválido.");
         }
 
-        Contribuinte contribuinte = buscarPorId(id);
+        Contribuinte contribuinte = findById(id);
         contribuinte.setAtivo(false);
         contribuinteRepository.save(contribuinte);
 
@@ -117,7 +117,7 @@ public class ContribuinteService implements ContribuinteIService {
     // LISTAR TODOS (apenas ativos)
     // -------------------------------------------------------------------------
     @Override
-    public List<Contribuinte> listarTodos() {
+    public List<Contribuinte> findByAtivoTrue() {
         log.info("Listando todos os Contribuintes ativos.");
         return contribuinteRepository.findByAtivoTrue();
     }

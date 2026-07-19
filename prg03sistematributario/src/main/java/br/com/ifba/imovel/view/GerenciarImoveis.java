@@ -41,7 +41,7 @@ public class GerenciarImoveis extends javax.swing.JFrame {
         modelo.setRowCount(0); // Limpa a tabela
 
         try {
-            for (br.com.ifba.imovel.entity.Imovel i : imovelController.listarTodos()) {
+            for (br.com.ifba.imovel.entity.Imovel i : imovelController.findByAtivoTrue()) {
                 
                 // 1. Verifica e pega o nome do dono
                 String nomeDono;
@@ -195,7 +195,7 @@ public class GerenciarImoveis extends javax.swing.JFrame {
  
         if (confirmacao == JOptionPane.YES_OPTION) {
             try {
-                imovelController.deletar(id);
+                imovelController.delete(id);
                 JOptionPane.showMessageDialog(this,
                         "Imóvel excluído com sucesso!",
                         "Sucesso", JOptionPane.INFORMATION_MESSAGE);
@@ -223,7 +223,7 @@ public class GerenciarImoveis extends javax.swing.JFrame {
  
         // Busca o objeto completo para obter endereço e contribuinte,
         // que não estão totalmente expostos nas colunas da tabela
-        Imovel imovel = imovelController.buscarPorId(id);
+        Imovel imovel = imovelController.findById(id);
  
         telaCadastro.setModo("EDITAR", id, this);
         telaCadastro.preencherCampos(imovel);
@@ -245,7 +245,7 @@ public class GerenciarImoveis extends javax.swing.JFrame {
 
         try {
             // Pegamos a lista completa de imóveis (usando 'var' para inferir o tipo da sua classe)
-            var listaDeImoveis = imovelController.listarTodos();
+            var listaDeImoveis = imovelController.findByAtivoTrue();
 
             // Substituímos o .stream().forEach() por um laço 'for' tradicional
             for (var i : listaDeImoveis) {

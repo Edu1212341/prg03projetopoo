@@ -12,9 +12,9 @@ import java.util.List;
  * @author eduar
  */
 public interface ImpostoIService {
-    Imposto salvar(Imposto imposto);
-    Imposto atualizar(Long id, Imposto imposto);
-    Imposto buscarPorId(Long id);
-    List<Imposto> listarTodos();
-    void deletar(Long id);
+    Imposto save(Imposto imposto);
+    Imposto update(Long id, Imposto imposto);
+    Imposto findById(Long id);
+    List<Imposto> findByAtivoTrue();
+    void delete(Long id);
 }

@@ -58,18 +58,6 @@ public class Imovel extends PersistenceEntity {
     @JoinColumn(name = "contribuinte_id", nullable = false)
     private Contribuinte contribuinte;
 
-    // -------------------------------------------------------------------------
-    // MÉTODO DE NEGÓCIO — conforme diagrama UML
-    // -------------------------------------------------------------------------
-    /**
-     * Calcula o valor venal do imóvel com base nas áreas e nos valores de
-     * referência por m² definidos pela planta genérica de valores do município.
-     *
-     * Fórmula: (areaTerreno × R$/m² terreno) + (areaConstruida × R$/m² construção)
-     *
-     * Os valores de R$/m² são exemplos — devem ser ajustados conforme a
-     * legislação municipal vigente.
-     */
     public Double calcularValorVenal() {
         //calculo de valor venal
         double valorM2Terreno    = 500.0;  // R$ por m² de terreno

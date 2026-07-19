@@ -26,16 +26,16 @@ public class ImpostoService implements ImpostoIService {
     private static final Logger log = LoggerFactory.getLogger(ImpostoService.class);
 
     @Override
-    public Imposto salvar(Imposto imposto) {
+    public Imposto save(Imposto imposto) {
         log.info("Salvando novo imposto.");
         validarImposto(imposto);
         return impostoRepository.save(imposto);
     }
 
     @Override
-    public Imposto atualizar(Long id, Imposto dadosNovos) {
+    public Imposto update(Long id, Imposto dadosNovos) {
         log.info("Atualizando imposto ID: {}", id);
-        Imposto impostoExistente = buscarPorId(id);
+        Imposto impostoExistente = findById(id);
 
         impostoExistente.setDescricao(dadosNovos.getDescricao());
         impostoExistente.setAnoExercicio(dadosNovos.getAnoExercicio());
@@ -54,20 +54,20 @@ public class ImpostoService implements ImpostoIService {
     }
 
     @Override
-    public Imposto buscarPorId(Long id) {
+    public Imposto findById(Long id) {
         return impostoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Imposto não encontrado."));
     }
 
     @Override
-    public List<Imposto> listarTodos() {
+    public List<Imposto> findByAtivoTrue() {
         return impostoRepository.findByAtivoTrue();
     }
 
     @Override
-    public void deletar(Long id) {
+    public void delete(Long id) {
         log.info("Inativando imposto ID: {}", id);
-        Imposto imposto = buscarPorId(id);
+        Imposto imposto = findById(id);
         imposto.setAtivo(false);
         impostoRepository.save(imposto);
     }
@@ -85,7 +85,7 @@ public class ImpostoService implements ImpostoIService {
         }
         
         // Validação específica caso seja um IPTU
-        if (imposto instanceof ImpostoIPTU) {
+        if (imposto instanceof ImpostoIPTU ) {
             ImpostoIPTU iptu = (ImpostoIPTU) imposto;
             if (iptu.getAliquotaTerreno() == null || iptu.getAliquotaTerreno() < 0) {
                 throw new IllegalArgumentException("A alíquota do terreno é inválida.");

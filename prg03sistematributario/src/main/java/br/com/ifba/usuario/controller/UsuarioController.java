@@ -22,31 +22,31 @@ public class UsuarioController implements UsuarioIController{
     private final UsuarioIService usuarioService;
 
     @Override
-    public Usuario salvar(Usuario usuario) {
-        return usuarioService.salvar(usuario);
+    public Usuario save(Usuario usuario) {
+        return usuarioService.save(usuario);
     }
 
     @Override
-    public Usuario atualizar(Long id, Usuario usuario) {
-        return usuarioService.atualizar(id, usuario);
+    public Usuario update(Long id, Usuario usuario) {
+        return usuarioService.update(id, usuario);
     }
 
     @Override
-    public Usuario buscarPorId(Long id) {
-        return usuarioService.buscarPorId(id);
+    public Usuario findById(Long id) {
+        return usuarioService.findById(id);
     }
 
     @Override
-    public List<Usuario> listarTodos() {
-        return usuarioService.listarTodos();
+    public List<Usuario> findByAtivoTrue() {
+        return usuarioService.findByAtivoTrue();
     }
 
     @Override
-    public void deletar(Long id) {
-        usuarioService.deletar(id);
+    public void delete(Long id) {
+        usuarioService.delete(id);
     }
     
-    public Usuario autenticar(String login, String senha) {
-        return usuarioService.autenticar(login, senha);
+    public Usuario authenticate(String login, String senha) {
+        return usuarioService.authenticate(login, senha);
     }
 }

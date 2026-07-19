@@ -371,12 +371,12 @@ public class TelaCadastroContribuinte extends javax.swing.JFrame {
  
             // Decide entre INSERT e UPDATE pelo modo atual
             if (modo.equals("EDITAR") && idEmEdicao != null) {
-                contribuinteController.atualizar(idEmEdicao, dados);
+                contribuinteController.update(idEmEdicao, dados);
                 JOptionPane.showMessageDialog(this,
                         "Contribuinte atualizado com sucesso!",
                         "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                contribuinteController.salvar(dados);
+                contribuinteController.save(dados);
                 JOptionPane.showMessageDialog(this,
                         "Contribuinte cadastrado com sucesso!",
                         "Sucesso", JOptionPane.INFORMATION_MESSAGE);

@@ -228,11 +228,11 @@ public class TelaCadastroUsuario extends javax.swing.JFrame {
 
         if (modo.equals("EDITAR") && idEmEdicao != null) {
             // 2. Passamos o ID de controle e o pacote de dados para o controller
-            usuarioController.atualizar(idEmEdicao, dadosFormulario);
+            usuarioController.update(idEmEdicao, dadosFormulario);
             JOptionPane.showMessageDialog(this, "Usuário atualizado com sucesso!");
         } else {
             // O cadastro do zero continua igual
-            usuarioController.salvar(dadosFormulario);
+            usuarioController.save(dadosFormulario);
             JOptionPane.showMessageDialog(this, "Usuário salvo!");
         }
 

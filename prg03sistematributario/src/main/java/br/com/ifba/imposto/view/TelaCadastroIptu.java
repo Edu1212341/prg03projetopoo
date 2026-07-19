@@ -211,10 +211,10 @@ public class TelaCadastroIptu extends javax.swing.JFrame {
             iptu.setAliquotaConstrucao(Double.parseDouble(txtAliquotaConstrucao.getText().replace(",", ".")));
 
             if (modo.equals("EDITAR") && idEmEdicao != null) {
-                impostoController.atualizar(idEmEdicao, iptu);
+                impostoController.update(idEmEdicao, iptu);
                 JOptionPane.showMessageDialog(this, "IPTU atualizado com sucesso!");
             } else {
-                impostoController.salvar(iptu);
+                impostoController.save(iptu);
                 JOptionPane.showMessageDialog(this, "IPTU cadastrado com sucesso!");
             }
 

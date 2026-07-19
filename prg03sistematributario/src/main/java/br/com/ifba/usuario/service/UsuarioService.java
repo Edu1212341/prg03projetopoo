@@ -26,7 +26,7 @@ public class UsuarioService implements UsuarioIService {
     
     private static final Logger log = LoggerFactory.getLogger(UsuarioService.class);
     @Override
-    public Usuario salvar(Usuario usuario) {
+    public Usuario save(Usuario usuario) {
         log.info("Iniciando o processo de salvar ");
         validarUsuario(usuario);
         Optional<Usuario> usuarioComMesmoLogin = usuarioRepository.findByLogin(usuario.getLogin());
@@ -37,9 +37,9 @@ public class UsuarioService implements UsuarioIService {
     }
 
     @Override
-    public Usuario atualizar(Long id, Usuario dadosNovos) {
+    public Usuario update(Long id, Usuario dadosNovos) {
         log.info("Iniciando processo de atualização de cadastro para o ID: {}", id);
-        Usuario usuarioExistente = buscarPorId(id);
+        Usuario usuarioExistente = findById(id);
 
         //para proteger o ADMIN
         if (usuarioExistente.getLogin().equalsIgnoreCase("admin")) {
@@ -78,7 +78,7 @@ public class UsuarioService implements UsuarioIService {
     }
 
     @Override
-    public Usuario buscarPorId(Long id) {
+    public Usuario findById(Long id) {
         log.info("Buscando usuário de ID: {}.", id);
 
         Optional<Usuario> usuarioEncontrado = usuarioRepository.findById(id);
@@ -91,7 +91,7 @@ public class UsuarioService implements UsuarioIService {
     }
 
     @Override
-    public void deletar(Long id) {
+    public void delete(Long id) {
         log.info("Iniciando a INATIVAÇÃO do usuário ID: {}", id);
    
         if (id == null || id <= 0) {
@@ -99,7 +99,7 @@ public class UsuarioService implements UsuarioIService {
             throw new IllegalArgumentException("O ID do usuário é inválido.");
         }
 
-        Usuario usuario = buscarPorId(id);
+        Usuario usuario = findById(id);
 
         // Bloqueia apenas a conta raiz 'admin', permitindo que administradores excluam outros ADMINs
         if (usuario.getLogin().equalsIgnoreCase("admin")) {
@@ -113,7 +113,7 @@ public class UsuarioService implements UsuarioIService {
     }
 
     @Override
-    public List<Usuario> listarTodos() {
+    public List<Usuario> findByAtivoTrue() {
         log.info("Listando todos os usuários.");
 
         List<Usuario> usuarios = usuarioRepository.findByAtivoTrue();
@@ -123,7 +123,7 @@ public class UsuarioService implements UsuarioIService {
     
     // Método para ser usado pela tela de login
     @Override
-    public Usuario autenticar(String login, String senha) {
+    public Usuario authenticate(String login, String senha) {
         Usuario usuario = usuarioRepository.findByLogin(login).orElseThrow(() -> new IllegalArgumentException("Erro: Usuário não encontrado."));
     
         // NOVA VERIFICAÇÃO: Ele está ativo?

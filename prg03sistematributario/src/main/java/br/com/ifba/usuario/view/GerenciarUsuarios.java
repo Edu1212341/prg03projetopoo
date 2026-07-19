@@ -41,7 +41,7 @@ public class GerenciarUsuarios extends javax.swing.JFrame {
             (javax.swing.table.DefaultTableModel) tblUsuarios.getModel();
         modelo.setRowCount(0);
 
-        for (Usuario u : usuarioController.listarTodos()) {
+        for (Usuario u : usuarioController.findByAtivoTrue()) {
             modelo.addRow(new Object[]{u.getNome(), u.getLogin(), u.getNivelAcesso(), u.getId()});
         }
     }
@@ -232,7 +232,7 @@ public class GerenciarUsuarios extends javax.swing.JFrame {
         // 6. Envia o comando para o Controller / Banco de Dados
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                usuarioController.deletar(id); // O seu Service ainda vai validar se não é a conta "admin"
+                usuarioController.delete(id); // O seu Service ainda vai validar se não é a conta "admin"
                 JOptionPane.showMessageDialog(this, "Usuário excluído com sucesso!");
             
                 // Limpa o "fantasma" do clique na tabela e recarrega os dados
@@ -273,7 +273,7 @@ public class GerenciarUsuarios extends javax.swing.JFrame {
             (javax.swing.table.DefaultTableModel) tblUsuarios.getModel();
         modelo.setRowCount(0);
         try {
-            usuarioController.listarTodos().stream()
+            usuarioController.findByAtivoTrue().stream()
                 .filter(u -> u.getNome().toLowerCase().contains(texto.toLowerCase())
                           || u.getLogin().toLowerCase().contains(texto.toLowerCase()))
                 .forEach(u -> modelo.addRow(new Object[]{

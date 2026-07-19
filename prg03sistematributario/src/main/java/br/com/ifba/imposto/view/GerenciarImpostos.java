@@ -40,7 +40,7 @@ public class GerenciarImpostos extends javax.swing.JFrame {
         modelo.setRowCount(0); // Limpa a tabela
 
         try {
-            for (Imposto imposto : impostoController.listarTodos()) {
+            for (Imposto imposto : impostoController.findByAtivoTrue()) {
                 
                 // Variáveis STR (strings) para carregar a tabela
                 String aliquotaTerrenoStr;
@@ -191,7 +191,7 @@ public class GerenciarImpostos extends javax.swing.JFrame {
 
         if (confirmacao == JOptionPane.YES_OPTION) {
             try {
-                impostoController.deletar(id); // Corrigido para impostoController
+                impostoController.delete(id); // Corrigido para impostoController
                 JOptionPane.showMessageDialog(this,
                     "Imposto excluído com sucesso!",
                     "Sucesso", JOptionPane.INFORMATION_MESSAGE);
@@ -221,7 +221,7 @@ public class GerenciarImpostos extends javax.swing.JFrame {
         Long id = (Long) tblImpostos.getValueAt(linha, 5);
 
         // Corrigido para buscar um Imposto através do impostoController
-        Imposto imposto = impostoController.buscarPorId(id);
+        Imposto imposto = impostoController.findById(id);
 
         telaCadastro.setModo("EDITAR", id, this);
         telaCadastro.preencherCampos(imposto);
@@ -242,7 +242,7 @@ public class GerenciarImpostos extends javax.swing.JFrame {
 
         try {
             // Corrigido para usar impostoController e varrer Impostos
-            for (Imposto imposto : impostoController.listarTodos()) {
+            for (Imposto imposto : impostoController.findByAtivoTrue()) {
                 
                 // Verifica se a descrição do imposto contém o texto buscado
                 if (imposto.getDescricao().toLowerCase().contains(texto.toLowerCase())) {

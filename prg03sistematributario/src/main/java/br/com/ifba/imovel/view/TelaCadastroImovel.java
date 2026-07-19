@@ -44,7 +44,7 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
     // Método para preencher o ComboBox com dados do banco
     public void carregarComboBoxContribuintes() {
         cmbContribuinte.removeAllItems(); // Limpa itens antigos
-        List<Contribuinte> listaContribuintes = contribuinteController.listarTodos();
+        List<Contribuinte> listaContribuintes = contribuinteController.findByAtivoTrue();
         
         for (Contribuinte c : listaContribuintes) {
             Long id = c.getId();
@@ -458,7 +458,7 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
             // --- FIM DAS CONVERSÕES ---
             
             // 4. Associa o Contribuinte ao Imóvel
-            Contribuinte dono = contribuinteController.buscarPorId(itemSelecionado.getId());
+            Contribuinte dono = contribuinteController.findById(itemSelecionado.getId());
             dados.setContribuinte(dono);
  
             // 5. CAIXA DE CONFIRMAÇÃO ANTES DE SALVAR COM IF/ELSE
@@ -484,10 +484,10 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
 
             //  Decide entre Salvar e Atualizar
             if (modo.equals("EDITAR") && idEmEdicao != null) {
-                imovelController.atualizar(idEmEdicao, dados);
+                imovelController.update(idEmEdicao, dados);
                 JOptionPane.showMessageDialog(this, "Imóvel atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                imovelController.salvar(dados);
+                imovelController.save(dados);
                 JOptionPane.showMessageDialog(this, "Imóvel cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             }
  
