@@ -167,7 +167,8 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
     private void mnuCadUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCadUsuarioActionPerformed
         // TODO add your handling code here:
-            telaGerenciarUsuarios.setVisible(true);
+        telaGerenciarUsuarios.carregarTabela();
+        telaGerenciarUsuarios.setVisible(true);
     }//GEN-LAST:event_mnuCadUsuarioActionPerformed
 
     private void mnuCadContribuinteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCadContribuinteActionPerformed
@@ -178,11 +179,13 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
     private void mnuImovelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuImovelActionPerformed
         // TODO add your handling code here:
+        telaGerenciarImoveis.carregarTabela();
         telaGerenciarImoveis.setVisible(true);
     }//GEN-LAST:event_mnuImovelActionPerformed
 
     private void mnuGerenciarImpostosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuGerenciarImpostosActionPerformed
         // TODO add your handling code here:
+        telaGerenciarImpostos.carregarTabela();
         telaGerenciarImpostos.setVisible(true);
     }//GEN-LAST:event_mnuGerenciarImpostosActionPerformed
 
@@ -200,6 +203,8 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
     private void mnuGerenciarPagamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuGerenciarPagamentosActionPerformed
         // TODO add your handling code here:
+        telaGerenciarPagamentos.carregarTabela();
+        telaGerenciarPagamentos.setVisible(true);
     }//GEN-LAST:event_mnuGerenciarPagamentosActionPerformed
 
     private void mnuSobreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSobreActionPerformed
@@ -232,17 +237,40 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         Usuario logado = sessaoService.getUsuarioLogado();
         
         if (logado == null) {
-            // Segurança: se não há usuário logado, esconde tudo sensível
-            mnuCadUsuario.setVisible(false);
+            // Se ninguém logou, esconde as opções principais por segurança
+            mnuCadastros.setVisible(false);
+            mnuTributos.setVisible(false);
             return;
         }
 
-        if (logado.getNivelAcesso().equals("ADMIN")) {
-            // ADMIN enxerga o item de gerenciar usuários
-            mnuCadUsuario.setVisible(true);
-        } else {
-            // FISCAL e ATENDENTE não enxergam
+        //deixa todos menus visiveis
+        mnuCadastros.setVisible(true);
+        mnuTributos.setVisible(true);
+        mnuCadUsuario.setVisible(true);
+        mnuCadContribuinte.setVisible(true);
+        mnuImovel.setVisible(true);
+        mnuEmissao.setVisible(true);
+        mnuConsulta.setVisible(true);
+        mnuGerenciarImpostos.setVisible(true);
+        mnuGerenciarPagamentos.setVisible(true);
+
+        // Ocultamos o que não é da alçada do cargo
+        String nivel = logado.getNivelAcesso();
+
+        if (nivel.equals("FISCAL")) {
+            // O Fiscal não mexe com usuários nem com o caixa (pagamentos)
             mnuCadUsuario.setVisible(false);
+            mnuGerenciarPagamentos.setVisible(false);
+            
+        } else if (nivel.equals("ATENDENTE")) {
+            // O Atendente atende o público e recebe pagamentos. Não altera as bases do IPTU.
+            mnuCadUsuario.setVisible(false);
+            mnuImovel.setVisible(false);
+            mnuEmissao.setVisible(false);
+            mnuGerenciarImpostos.setVisible(false);
+            
+        } else if (nivel.equals("ADMIN")) {
+            // O Admin vê absolutamente tudo. Não precisamos ocultar nada.
         }
     }
 

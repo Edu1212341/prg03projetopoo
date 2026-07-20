@@ -6,10 +6,8 @@ package br.com.ifba.lancamento.view;
 
 import br.com.ifba.imovel.controller.ImovelIController;
 import br.com.ifba.imovel.entity.Imovel;
-import br.com.ifba.imposto.view.*;
 import br.com.ifba.imposto.controller.ImpostoIController;
 import br.com.ifba.imposto.entity.Imposto;
-import br.com.ifba.imposto.entity.ImpostoIPTU;
 import br.com.ifba.lancamento.controller.LancamentoImpostoIController;
 import br.com.ifba.lancamento.entity.LancamentoImposto;
 import java.util.ArrayList;

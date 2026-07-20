@@ -5,6 +5,8 @@
 package br.com.ifba.lancamento.view;
 import br.com.ifba.lancamento.controller.LancamentoImpostoIController;
 import br.com.ifba.lancamento.entity.LancamentoImposto;
+import br.com.ifba.usuario.entity.Usuario;
+import br.com.ifba.usuario.service.SessaoService;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +23,15 @@ public class GerenciarLancamentos extends javax.swing.JFrame {
 
     private final LancamentoImpostoIController lancamentoController;
     private final TelaCadastroLancamento telaCadastro;
+    private final SessaoService sessaoService;
     
     /**
      * Creates new form GerenciarImoveis
      */
-    public GerenciarLancamentos(LancamentoImpostoIController lancamentoController,TelaCadastroLancamento telaCadastro) {
+    public GerenciarLancamentos(LancamentoImpostoIController lancamentoController, TelaCadastroLancamento telaCadastro, SessaoService sessaoService) { 
         this.lancamentoController = lancamentoController;
         this.telaCadastro         = telaCadastro;
+        this.sessaoService        = sessaoService; 
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         initComponents();
@@ -278,7 +282,21 @@ public class GerenciarLancamentos extends javax.swing.JFrame {
                     "Erro ao buscar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
-
+    @Override
+    public void setVisible(boolean visible) {
+        if (visible) {
+            Usuario logado = sessaoService.getUsuarioLogado();
+            
+            // Se NÃO for ADMIN, o botão de inativar/excluir fica cinza (desabilitado)
+            if (logado != null && !logado.getNivelAcesso().equals("ADMIN")) {
+                btnExcluir.setEnabled(false);
+                btnExcluir.setToolTipText("Apenas administradores podem inativar lançamentos.");
+            } else {
+                btnExcluir.setEnabled(true);
+            }
+        }
+        super.setVisible(visible);
+    }
     /**
      * @param args the command line arguments
      */
