@@ -4,10 +4,9 @@
  */
 package br.com.ifba.pagamento.view;
 
-import br.com.ifba.imovel.view.*;
-import br.com.ifba.contribuinte.view.GerenciarContribuintes;
-import br.com.ifba.imovel.controller.ImovelIController;
-import br.com.ifba.imovel.entity.Imovel;
+import br.com.ifba.pagamento.controller.PagamentoIController;
+import br.com.ifba.pagamento.entity.Pagamento;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,57 +19,63 @@ import org.springframework.stereotype.Component;
 @Component
 public class GerenciarPagamentos extends javax.swing.JFrame {
     
-     private static final Logger log = LoggerFactory.getLogger(GerenciarPagamentos.class);
-
-    private final ImovelIController imovelController;
-    private final TelaCadastroImovel telaCadastro;
+    private static final Logger log = LoggerFactory.getLogger(GerenciarPagamentos.class);
+    private static final DateTimeFormatter FMT_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+ 
+    private final PagamentoIController pagamentoController;
     
     /**
      * Creates new form GerenciarImoveis
      */
-    public GerenciarPagamentos(ImovelIController imovelController, TelaCadastroImovel telaCadastro) {
-        this.imovelController = imovelController;
-        this.telaCadastro = telaCadastro;
+    public GerenciarPagamentos(PagamentoIController pagamentoController) {
+        this.pagamentoController = pagamentoController;
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         initComponents();
         carregarTabela();
     }
     
-    public void carregarTabela(){
-        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblPagamentos.getModel();
-        modelo.setRowCount(0); // Limpa a tabela
-
+    public void carregarTabela() {
+        javax.swing.table.DefaultTableModel modelo =
+                (javax.swing.table.DefaultTableModel) tblPagamentos.getModel();
+        modelo.setRowCount(0);
+ 
         try {
-            for (br.com.ifba.imovel.entity.Imovel i : imovelController.findByAtivoTrue()) {
-                
-                // 1. Verifica e pega o nome do dono
-                String nomeDono;
-                if (i.getContribuinte() != null) {
-                    nomeDono = i.getContribuinte().getNome();
+            for (Pagamento p : pagamentoController.findByAtivoTrue()) {
+ 
+                String data;
+                if (p.getDataPagamento() != null) {
+                    data = p.getDataPagamento().format(FMT_DATA);
                 } else {
-                    nomeDono = "Sem dono";
+                    data = "-";
                 }
-                
-                // 2. Verifica e pega o bairro com segurança
-                String bairro;
-                if (i.getEndereco() != null && i.getEndereco().getBairro() != null) {
-                    bairro = i.getEndereco().getBairro();
+ 
+                String codigoBoleto;
+                if (p.getBoletoPrefeitura() != null) {
+                    codigoBoleto = p.getBoletoPrefeitura().getNumeroCodigoBarras();
                 } else {
-                    bairro = "-";
+                    codigoBoleto = "-";
                 }
-                
-                // 3. Adiciona a linha na mesma ordem configurada no visual
+ 
+                String nomeUsuario;
+                if (p.getUsuario() != null) {
+                    nomeUsuario = p.getUsuario().getNome();
+                } else {
+                    nomeUsuario = "-";
+                }
+ 
                 modelo.addRow(new Object[]{
-                    i.getInscricaoImobiliaria(), // Coluna 1: Inscrição
-                    nomeDono,                    // Coluna 2: Contribuinte
-                    bairro,                      // Coluna 3: Bairro
-                    i.getValorVenal(),           // Coluna 4: Valor Venal
-                    i.getId()                    // Coluna 5: ID
+                    data,                                          // Col. 0
+                    String.format("R$ %.2f", p.getValorPago()),   // Col. 1
+                    p.getStatus(),                                 // Col. 2
+                    codigoBoleto,                                  // Col. 3
+                    nomeUsuario,                                   // Col. 4
+                    p.getId()                                      // Col. 5
                 });
             }
         } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao carregar tabela: " + e.getMessage());
+            log.error("Erro ao carregar tabela de pagamentos: {}", e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao carregar tabela: " + e.getMessage());
         }
     }
     /**
@@ -157,36 +162,39 @@ public class GerenciarPagamentos extends javax.swing.JFrame {
         int linha = tblPagamentos.getSelectedRow();
         if (linha == -1) {
             JOptionPane.showMessageDialog(this,
-                    "Selecione um imóvel na tabela para excluir.",
+                    "Selecione um pagamento para estornar.",
                     "Nenhuma seleção", JOptionPane.WARNING_MESSAGE);
             return;
         }
  
-        Long   id                 = (Long)   tblPagamentos.getValueAt(linha, 4);
-        String inscricao          = (String) tblPagamentos.getValueAt(linha, 0);
+        Long   id     = (Long)   tblPagamentos.getValueAt(linha, 5);
+        String status = (String) tblPagamentos.getValueAt(linha, 2);
+        String valor  = (String) tblPagamentos.getValueAt(linha, 1);
  
-        int confirmacao = JOptionPane.showConfirmDialog(
-                this,
-                "Tem certeza que deseja excluir o imóvel:\n\"" + inscricao + "\"?",
-                "Confirmar Exclusão",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE
-        );
+        if (status.equals("ESTORNADO")) {
+            JOptionPane.showMessageDialog(this,
+                    "Este pagamento já foi estornado.",
+                    "Ação inválida", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+ 
+        int confirmacao = JOptionPane.showConfirmDialog(this,
+                "Tem certeza que deseja ESTORNAR o pagamento de " + valor + "?\n"
+                + "O boleto voltará para o status PENDENTE.",
+                "Confirmar Estorno", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
  
         if (confirmacao == JOptionPane.YES_OPTION) {
             try {
-                imovelController.delete(id);
+                pagamentoController.delete(id);
                 JOptionPane.showMessageDialog(this,
-                        "Imóvel excluído com sucesso!",
+                        "Pagamento estornado com sucesso!\nO boleto voltou para PENDENTE.",
                         "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 tblPagamentos.clearSelection();
                 carregarTabela();
- 
             } catch (Exception ex) {
-                log.error("Erro ao excluir imóvel ID {}: {}", id, ex.getMessage());
+                log.error("Erro ao estornar pagamento ID {}: {}", id, ex.getMessage());
                 JOptionPane.showMessageDialog(this,
-                        ex.getMessage(),
-                        "Erro ao Excluir", JOptionPane.ERROR_MESSAGE);
+                        ex.getMessage(), "Erro ao Estornar", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnEstornarActionPerformed
@@ -194,79 +202,66 @@ public class GerenciarPagamentos extends javax.swing.JFrame {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         String texto = txtBuscar.getText().trim();
-
+ 
         if (texto.isEmpty()) {
             carregarTabela();
             return;
         }
-
-        javax.swing.table.DefaultTableModel modelo = 
+ 
+        javax.swing.table.DefaultTableModel modelo =
                 (javax.swing.table.DefaultTableModel) tblPagamentos.getModel();
         modelo.setRowCount(0);
-
+ 
         try {
-            // Pegamos a lista completa de imóveis (usando 'var' para inferir o tipo da sua classe)
-            var listaDeImoveis = imovelController.findByAtivoTrue();
-
-            // Substituímos o .stream().forEach() por um laço 'for' tradicional
-            for (var i : listaDeImoveis) {
-        
-                // 1. Expandindo a lógica do .filter()
-                boolean correspondeABusca = false;
-
-                // Verifica se o texto digitado está na inscrição imobiliária
-                if (i.getInscricaoImobiliaria().toLowerCase().contains(texto.toLowerCase())) {
-                    correspondeABusca = true;
+            for (Pagamento p : pagamentoController.findByAtivoTrue()) {
+ 
+                String nomeUsuario;
+                if (p.getUsuario() != null) {
+                    nomeUsuario = p.getUsuario().getNome();
+                } else {
+                    nomeUsuario = "";
                 }
-
-                // Verifica se o texto digitado está no nome do contribuinte
-                if (i.getContribuinte() != null) {
-                    if (i.getContribuinte().getNome().toLowerCase().contains(texto.toLowerCase())) {
-                        correspondeABusca = true;
-                    }
+ 
+                String codBoleto;
+                if (p.getBoletoPrefeitura() != null) {
+                    codBoleto = p.getBoletoPrefeitura().getNumeroCodigoBarras();
+                } else {
+                    codBoleto = "";
                 }
-
-                // Se o imóvel bateu com alguma das condições acima, preparamos os dados
-                if (correspondeABusca) {
-            
-                    // 2. Expandindo o ternário do Contribuinte
-                    String nomeContribuinte;
-                    if (i.getContribuinte() != null) {
-                        nomeContribuinte = i.getContribuinte().getNome();
+ 
+                boolean correspondeStatus  = p.getStatus().toLowerCase().contains(texto.toLowerCase());
+                boolean correspondeUsuario = nomeUsuario.toLowerCase().contains(texto.toLowerCase());
+                boolean correspondeBoleto  = codBoleto.toLowerCase().contains(texto.toLowerCase());
+ 
+                if (correspondeStatus || correspondeUsuario || correspondeBoleto) {
+ 
+                    String data;
+                    if (p.getDataPagamento() != null) {
+                        data = p.getDataPagamento().format(FMT_DATA);
                     } else {
-                        nomeContribuinte = "Sem contribuinte";
+                        data = "-";
                     }
-
-                    // 3. A lógica do Bairro (que já havíamos expandido)
-                    String bairro;
-                    if (i.getEndereco() != null) {
-                        bairro = i.getEndereco().getBairro();
-                    } else {
-                        bairro = "-";
-                    }
-
-                    // 4. Finalmente, adicionamos a linha na tabela
+ 
                     modelo.addRow(new Object[]{
-                        i.getInscricaoImobiliaria(),
-                        nomeContribuinte,
-                        bairro,
-                        i.getValorVenal(),
-                        i.getId()
+                        data,
+                        String.format("R$ %.2f", p.getValorPago()),
+                        p.getStatus(),
+                        codBoleto,
+                        nomeUsuario,
+                        p.getId()
                     });
                 }
             }
-
-            // Se o laço terminou e nenhuma linha foi adicionada
+ 
             if (modelo.getRowCount() == 0) {
                 JOptionPane.showMessageDialog(this,
-                        "Nenhum imóvel encontrado para: \"" + texto + "\".",
+                        "Nenhum pagamento encontrado para: \"" + texto + "\".",
                         "Busca sem resultado", JOptionPane.INFORMATION_MESSAGE);
             }
-
+ 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
-                    "Erro ao buscar: " + ex.getMessage(),
-                    "Erro", JOptionPane.ERROR_MESSAGE);
+                    "Erro ao buscar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 

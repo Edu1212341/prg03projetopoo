@@ -4,10 +4,11 @@
  */
 package br.com.ifba.boleto.view;
 
-import br.com.ifba.imovel.view.*;
-import br.com.ifba.contribuinte.view.GerenciarContribuintes;
-import br.com.ifba.imovel.controller.ImovelIController;
-import br.com.ifba.imovel.entity.Imovel;
+import br.com.ifba.boleto.controller.BoletosPrefeituraIController;
+import br.com.ifba.boleto.entity.BoletosPrefeitura;
+import br.com.ifba.pagamento.controller.PagamentoIController;
+import br.com.ifba.usuario.service.SessaoService;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,57 +21,57 @@ import org.springframework.stereotype.Component;
 @Component
 public class GerenciarBoletos extends javax.swing.JFrame {
     
-     private static final Logger log = LoggerFactory.getLogger(GerenciarBoletos.class);
-
-    private final ImovelIController imovelController;
-    private final TelaCadastroImovel telaCadastro;
+    private static final Logger log = LoggerFactory.getLogger(GerenciarBoletos.class);
+    private static final DateTimeFormatter FMT_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+ 
+    private final BoletosPrefeituraIController boletoController;
+    private final PagamentoIController         pagamentoController;
+    private final SessaoService                sessaoService;
     
     /**
      * Creates new form GerenciarImoveis
      */
-    public GerenciarBoletos(ImovelIController imovelController, TelaCadastroImovel telaCadastro) {
-        this.imovelController = imovelController;
-        this.telaCadastro = telaCadastro;
+    public GerenciarBoletos(BoletosPrefeituraIController boletoController, PagamentoIController pagamentoController, SessaoService sessaoService) {
+        this.boletoController    = boletoController;
+        this.pagamentoController = pagamentoController;
+        this.sessaoService       = sessaoService;
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         initComponents();
         carregarTabela();
     }
     
-    public void carregarTabela(){
+    public void carregarTabela() {
         javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblBoletos.getModel();
-        modelo.setRowCount(0); // Limpa a tabela
-
+        modelo.setRowCount(0);
+ 
         try {
-            for (br.com.ifba.imovel.entity.Imovel i : imovelController.findByAtivoTrue()) {
-                
-                // 1. Verifica e pega o nome do dono
-                String nomeDono;
-                if (i.getContribuinte() != null) {
-                    nomeDono = i.getContribuinte().getNome();
-                } else {
-                    nomeDono = "Sem dono";
+            for (BoletosPrefeitura b : boletoController.findByAtivoTrue()) {
+ 
+                // Atualiza automaticamente boletos vencidos
+                if (b.getStatus().equals("PENDENTE") && b.verificarVencimento()) {
+                    boletoController.updateStatus(b.getId(), "VENCIDO");
+                    b.setStatus("VENCIDO");
                 }
-                
-                // 2. Verifica e pega o bairro com segurança
-                String bairro;
-                if (i.getEndereco() != null && i.getEndereco().getBairro() != null) {
-                    bairro = i.getEndereco().getBairro();
+ 
+                String vencimento;
+                if (b.getDataVencimento() != null) {
+                    vencimento = b.getDataVencimento().format(FMT_DATA);
                 } else {
-                    bairro = "-";
+                    vencimento = "-";
                 }
-                
-                // 3. Adiciona a linha na mesma ordem configurada no visual
+ 
                 modelo.addRow(new Object[]{
-                    i.getInscricaoImobiliaria(), // Coluna 1: Inscrição
-                    nomeDono,                    // Coluna 2: Contribuinte
-                    bairro,                      // Coluna 3: Bairro
-                    i.getValorVenal(),           // Coluna 4: Valor Venal
-                    i.getId()                    // Coluna 5: ID
+                    b.getNumeroCodigoBarras(),                      // Colunas
+                    String.format("R$ %.2f", b.getValorBoleto()),  
+                    vencimento,                                   
+                    b.getStatus(),                                 
+                    b.getId()                                      
                 });
             }
         } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao carregar tabela: " + e.getMessage());
+            log.error("Erro ao carregar tabela de boletos: {}", e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao carregar tabela: " + e.getMessage());
         }
     }
     /**
@@ -161,8 +162,54 @@ public class GerenciarBoletos extends javax.swing.JFrame {
 
     private void btnPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagarActionPerformed
         // TODO add your handling code here:
-        telaCadastro.setModo("SALVAR", null, this);
-        telaCadastro.setVisible(true);
+        int linha = tblBoletos.getSelectedRow();
+        if (linha == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Selecione um boleto para registrar o pagamento.",
+                    "Nenhuma seleção", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+ 
+        Long   boletoId = (Long)   tblBoletos.getValueAt(linha, 4);
+        String status   = (String) tblBoletos.getValueAt(linha, 3);
+        String valor    = (String) tblBoletos.getValueAt(linha, 1);
+ 
+        if (status.equals("PAGO")) {
+            JOptionPane.showMessageDialog(this,
+                    "Este boleto já foi pago.",
+                    "Ação inválida", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+ 
+        if (status.equals("VENCIDO")) {
+            int opcao = JOptionPane.showConfirmDialog(this,
+                    "Este boleto está VENCIDO.\nDeseja registrar o pagamento mesmo assim?",
+                    "Boleto Vencido", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+ 
+            if (opcao != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
+ 
+        int confirmacao = JOptionPane.showConfirmDialog(this,
+                "Confirmar pagamento do boleto?\nValor: " + valor,
+                "Confirmar Pagamento", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+ 
+        if (confirmacao == JOptionPane.YES_OPTION) {
+            try {
+                Long usuarioId = sessaoService.getUsuarioLogado().getId();
+                pagamentoController.save(boletoId, usuarioId);
+                JOptionPane.showMessageDialog(this,
+                        "Pagamento registrado com sucesso!",
+                        "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                tblBoletos.clearSelection();
+                carregarTabela();
+            } catch (Exception ex) {
+                log.error("Erro ao registrar pagamento do boleto ID {}: {}", boletoId, ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ex.getMessage(), "Erro ao Pagar", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnPagarActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
@@ -170,36 +217,30 @@ public class GerenciarBoletos extends javax.swing.JFrame {
         int linha = tblBoletos.getSelectedRow();
         if (linha == -1) {
             JOptionPane.showMessageDialog(this,
-                    "Selecione um imóvel na tabela para excluir.",
+                    "Selecione um boleto para excluir.",
                     "Nenhuma seleção", JOptionPane.WARNING_MESSAGE);
             return;
         }
  
-        Long   id                 = (Long)   tblBoletos.getValueAt(linha, 4);
-        String inscricao          = (String) tblBoletos.getValueAt(linha, 0);
+        Long   id     = (Long)   tblBoletos.getValueAt(linha, 4);
+        String codigo = (String) tblBoletos.getValueAt(linha, 0);
  
-        int confirmacao = JOptionPane.showConfirmDialog(
-                this,
-                "Tem certeza que deseja excluir o imóvel:\n\"" + inscricao + "\"?",
-                "Confirmar Exclusão",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE
-        );
+        int confirmacao = JOptionPane.showConfirmDialog(this,
+                "Tem certeza que deseja excluir o boleto:\n\"" + codigo + "\"?",
+                "Confirmar Exclusão", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
  
         if (confirmacao == JOptionPane.YES_OPTION) {
             try {
-                imovelController.delete(id);
+                boletoController.delete(id);
                 JOptionPane.showMessageDialog(this,
-                        "Imóvel excluído com sucesso!",
+                        "Boleto excluído com sucesso!",
                         "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 tblBoletos.clearSelection();
                 carregarTabela();
- 
             } catch (Exception ex) {
-                log.error("Erro ao excluir imóvel ID {}: {}", id, ex.getMessage());
+                log.error("Erro ao excluir boleto ID {}: {}", id, ex.getMessage());
                 JOptionPane.showMessageDialog(this,
-                        ex.getMessage(),
-                        "Erro ao Excluir", JOptionPane.ERROR_MESSAGE);
+                        ex.getMessage(), "Erro ao Excluir", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnExcluirActionPerformed
@@ -207,79 +248,53 @@ public class GerenciarBoletos extends javax.swing.JFrame {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         String texto = txtBuscar.getText().trim();
-
+ 
         if (texto.isEmpty()) {
             carregarTabela();
             return;
         }
-
-        javax.swing.table.DefaultTableModel modelo = 
+ 
+        javax.swing.table.DefaultTableModel modelo =
                 (javax.swing.table.DefaultTableModel) tblBoletos.getModel();
         modelo.setRowCount(0);
-
+ 
         try {
-            // Pegamos a lista completa de imóveis (usando 'var' para inferir o tipo da sua classe)
-            var listaDeImoveis = imovelController.findByAtivoTrue();
-
-            // Substituímos o .stream().forEach() por um laço 'for' tradicional
-            for (var i : listaDeImoveis) {
-        
-                // 1. Expandindo a lógica do .filter()
-                boolean correspondeABusca = false;
-
-                // Verifica se o texto digitado está na inscrição imobiliária
-                if (i.getInscricaoImobiliaria().toLowerCase().contains(texto.toLowerCase())) {
-                    correspondeABusca = true;
-                }
-
-                // Verifica se o texto digitado está no nome do contribuinte
-                if (i.getContribuinte() != null) {
-                    if (i.getContribuinte().getNome().toLowerCase().contains(texto.toLowerCase())) {
-                        correspondeABusca = true;
-                    }
-                }
-
-                // Se o imóvel bateu com alguma das condições acima, preparamos os dados
-                if (correspondeABusca) {
-            
-                    // 2. Expandindo o ternário do Contribuinte
-                    String nomeContribuinte;
-                    if (i.getContribuinte() != null) {
-                        nomeContribuinte = i.getContribuinte().getNome();
+            for (BoletosPrefeitura b : boletoController.findByAtivoTrue()) {
+ 
+                boolean correspondeCodigoBarras = b.getNumeroCodigoBarras()
+                        .toLowerCase().contains(texto.toLowerCase());
+ 
+                boolean correspondeStatus = b.getStatus()
+                        .toLowerCase().contains(texto.toLowerCase());
+ 
+                if (correspondeCodigoBarras || correspondeStatus) {
+ 
+                    String vencimento;
+                    if (b.getDataVencimento() != null) {
+                        vencimento = b.getDataVencimento().format(FMT_DATA);
                     } else {
-                        nomeContribuinte = "Sem contribuinte";
+                        vencimento = "-";
                     }
-
-                    // 3. A lógica do Bairro (que já havíamos expandido)
-                    String bairro;
-                    if (i.getEndereco() != null) {
-                        bairro = i.getEndereco().getBairro();
-                    } else {
-                        bairro = "-";
-                    }
-
-                    // 4. Finalmente, adicionamos a linha na tabela
+ 
                     modelo.addRow(new Object[]{
-                        i.getInscricaoImobiliaria(),
-                        nomeContribuinte,
-                        bairro,
-                        i.getValorVenal(),
-                        i.getId()
+                        b.getNumeroCodigoBarras(),
+                        String.format("R$ %.2f", b.getValorBoleto()),
+                        vencimento,
+                        b.getStatus(),
+                        b.getId()
                     });
                 }
             }
-
-            // Se o laço terminou e nenhuma linha foi adicionada
+ 
             if (modelo.getRowCount() == 0) {
                 JOptionPane.showMessageDialog(this,
-                        "Nenhum imóvel encontrado para: \"" + texto + "\".",
+                        "Nenhum boleto encontrado para: \"" + texto + "\".",
                         "Busca sem resultado", JOptionPane.INFORMATION_MESSAGE);
             }
-
+ 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
-                    "Erro ao buscar: " + ex.getMessage(),
-                    "Erro", JOptionPane.ERROR_MESSAGE);
+                    "Erro ao buscar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 

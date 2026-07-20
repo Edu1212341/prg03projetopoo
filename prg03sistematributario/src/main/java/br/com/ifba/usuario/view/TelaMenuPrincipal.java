@@ -5,11 +5,15 @@
 package br.com.ifba.usuario.view;
 
 import static br.com.ifba.Application.context;
+import br.com.ifba.boleto.view.GerenciarBoletos;
 import br.com.ifba.contribuinte.view.GerenciarContribuintes;
 import br.com.ifba.imovel.view.GerenciarImoveis;
 import br.com.ifba.imposto.view.GerenciarImpostos;
+import br.com.ifba.lancamento.view.GerenciarLancamentos;
+import br.com.ifba.pagamento.view.GerenciarPagamentos;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.service.SessaoService;
+import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -21,22 +25,37 @@ import org.springframework.stereotype.Component;
 @Component
 public class TelaMenuPrincipal extends javax.swing.JFrame {
     
-    private static final Logger log = LoggerFactory.getLogger(TelaMenuPrincipal.class);    private final GerenciarUsuarios telaGerenciarUsuarios;
+    private static final Logger log = LoggerFactory.getLogger(TelaMenuPrincipal.class);
+    private final GerenciarUsuarios telaGerenciarUsuarios;
     private final SessaoService sessaoService;
     private final GerenciarContribuintes telaGerenciarContribuintes;
     private final GerenciarImoveis telaGerenciarImoveis;
     private final GerenciarImpostos  telaGerenciarImpostos; 
+    private final GerenciarLancamentos telaGerenciarLancamentos;
+    private final GerenciarBoletos telaGerenciarBoletos;
+    private final GerenciarPagamentos telaGerenciarPagamentos;
     /**
      * Creates new form TelaMenuPrincipal
      */
 
     //Construtor pika
-    public TelaMenuPrincipal(GerenciarUsuarios telaGerenciarUsuarios, GerenciarContribuintes telaGerenciarContribuintes, SessaoService sessaoService, GerenciarImoveis telaGerenciarImoveis, GerenciarImpostos  telaGerenciarImpostos) {
-        this.telaGerenciarUsuarios     = telaGerenciarUsuarios;
+    public TelaMenuPrincipal(GerenciarUsuarios telaGerenciarUsuarios, 
+            GerenciarContribuintes telaGerenciarContribuintes, 
+            SessaoService sessaoService, 
+            GerenciarImoveis telaGerenciarImoveis, 
+            GerenciarImpostos telaGerenciarImpostos,
+            GerenciarLancamentos telaGerenciarLancamentos,
+            GerenciarBoletos telaGerenciarBoletos,
+            GerenciarPagamentos telaGerenciarPagamentos) {
+        
+        this.telaGerenciarUsuarios = telaGerenciarUsuarios;
         this.telaGerenciarContribuintes = telaGerenciarContribuintes;
         this.telaGerenciarImoveis = telaGerenciarImoveis;
         this.telaGerenciarImpostos = telaGerenciarImpostos;
-        this.sessaoService             = sessaoService;
+        this.sessaoService = sessaoService;
+        this.telaGerenciarLancamentos = telaGerenciarLancamentos;
+        this.telaGerenciarBoletos = telaGerenciarBoletos;
+        this.telaGerenciarPagamentos = telaGerenciarPagamentos;
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         initComponents();
@@ -62,6 +81,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         mnuEmissao = new javax.swing.JMenuItem();
         mnuConsulta = new javax.swing.JMenuItem();
         mnuGerenciarImpostos = new javax.swing.JMenuItem();
+        mnuGerenciarPagamentos = new javax.swing.JMenuItem();
         mnuAjuda = new javax.swing.JMenu();
         mnuSobre = new javax.swing.JMenuItem();
 
@@ -94,20 +114,27 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         mnuTributos.setText("Tributos");
 
         mnuEmissao.setText("Emissão de Guias");
+        mnuEmissao.addActionListener(this::mnuEmissaoActionPerformed);
         mnuTributos.add(mnuEmissao);
 
         mnuConsulta.setText("Consulta Débitos");
+        mnuConsulta.addActionListener(this::mnuConsultaActionPerformed);
         mnuTributos.add(mnuConsulta);
 
         mnuGerenciarImpostos.setText("GerenciarImpostos");
         mnuGerenciarImpostos.addActionListener(this::mnuGerenciarImpostosActionPerformed);
         mnuTributos.add(mnuGerenciarImpostos);
 
+        mnuGerenciarPagamentos.setText("Realizar Pagamentos");
+        mnuGerenciarPagamentos.addActionListener(this::mnuGerenciarPagamentosActionPerformed);
+        mnuTributos.add(mnuGerenciarPagamentos);
+
         jMenuBar1.add(mnuTributos);
 
         mnuAjuda.setText("Ajuda");
 
         mnuSobre.setText("Sobre");
+        mnuSobre.addActionListener(this::mnuSobreActionPerformed);
         mnuAjuda.add(mnuSobre);
 
         jMenuBar1.add(mnuAjuda);
@@ -122,7 +149,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 377, Short.MAX_VALUE)
+            .addGap(0, 378, Short.MAX_VALUE)
         );
 
         pack();
@@ -158,6 +185,38 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         telaGerenciarImpostos.setVisible(true);
     }//GEN-LAST:event_mnuGerenciarImpostosActionPerformed
+
+    private void mnuEmissaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuEmissaoActionPerformed
+        // TODO add your handling code here:
+        telaGerenciarLancamentos.carregarTabela();
+        telaGerenciarLancamentos.setVisible(true);
+    }//GEN-LAST:event_mnuEmissaoActionPerformed
+
+    private void mnuConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuConsultaActionPerformed
+        // TODO add your handling code here:
+        telaGerenciarBoletos.carregarTabela();
+        telaGerenciarBoletos.setVisible(true);
+    }//GEN-LAST:event_mnuConsultaActionPerformed
+
+    private void mnuGerenciarPagamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuGerenciarPagamentosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mnuGerenciarPagamentosActionPerformed
+
+    private void mnuSobreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSobreActionPerformed
+        // TODO add your handling code here:
+        String mensagem = "Sistema de Gerenciamento de Tributos\n"
+                        + "Versão: 1.0\n\n"
+                        + "Desenvolvido por: Eduardo Nascimento\n"
+                        + "Instituto Federal da Bahia (IFBA) - Campus Irecê\n"
+                        + "Curso: Análise e Desenvolvimento de Sistemas\n\n"
+                        + "Sistema desenvolvido com Spring Boot e Java Swing.\n"
+                        + "© 2026 Todos os direitos reservados.";
+        
+        JOptionPane.showMessageDialog(this, 
+                                      mensagem, 
+                                      "Sobre o Sistema", 
+                                      JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_mnuSobreActionPerformed
 
     /**
      * @param args the command line arguments
@@ -196,6 +255,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnuConsulta;
     private javax.swing.JMenuItem mnuEmissao;
     private javax.swing.JMenuItem mnuGerenciarImpostos;
+    private javax.swing.JMenuItem mnuGerenciarPagamentos;
     private javax.swing.JMenuItem mnuImovel;
     private javax.swing.JMenuItem mnuSair;
     private javax.swing.JMenu mnuSistema;
