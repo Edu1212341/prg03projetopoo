@@ -3,11 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package br.com.ifba.lancamento.view;
-
-import br.com.ifba.imovel.view.*;
-import br.com.ifba.contribuinte.view.GerenciarContribuintes;
-import br.com.ifba.imovel.controller.ImovelIController;
-import br.com.ifba.imovel.entity.Imovel;
 import br.com.ifba.lancamento.controller.LancamentoImpostoIController;
 import br.com.ifba.lancamento.entity.LancamentoImposto;
 import javax.swing.JOptionPane;
@@ -63,11 +58,11 @@ public class GerenciarLancamentos extends javax.swing.JFrame {
                 String valorFormatado = String.format("R$ %.2f", l.getValorTotalCalculado());
  
                 modelo.addRow(new Object[]{
-                    inscricao,       // Col. 0
-                    imposto,         // Col. 1
-                    l.getAno(),      // Col. 2
-                    valorFormatado,  // Col. 3
-                    l.getId()        // Col. 4
+                    inscricao,
+                    imposto,
+                    String.valueOf(l.getAno()),
+                    valorFormatado,
+                    l.getId() 
                 });
             }
         } catch (Exception e) {

@@ -149,7 +149,7 @@ public class TelaCadastroLancamento extends javax.swing.JFrame {
         lblTitulo.setBackground(new java.awt.Color(204, 204, 255));
         lblTitulo.setFont(new java.awt.Font("Inter Black", 0, 24)); // NOI18N
         lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTitulo.setText("Titulo Automático da ??? tela");
+        lblTitulo.setText("Titulo Automático da :) tela");
 
         lblImovel.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         lblImovel.setText("Imovel:");
@@ -160,7 +160,7 @@ public class TelaCadastroLancamento extends javax.swing.JFrame {
         lblParcelas.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         lblParcelas.setText("N° Parcelas:");
 
-        lblBanco.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/banco.png"))); // NOI18N
+        lblBanco.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/pasta-de-documentos.png"))); // NOI18N
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/salve-.png"))); // NOI18N
         btnSalvar.setText("SALVAR");
@@ -180,7 +180,7 @@ public class TelaCadastroLancamento extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(28, 28, 28)
@@ -202,11 +202,11 @@ public class TelaCadastroLancamento extends javax.swing.JFrame {
                         .addGap(51, 51, 51)
                         .addComponent(lblBanco)
                         .addGap(37, 37, 37))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(lblImovel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cmbImovel, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(344, 344, 344))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

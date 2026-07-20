@@ -26,7 +26,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BoletosPrefeitura extends PersistenceEntity implements GeradorDocumentos {
 
-    /** Código de barras único de 44 caracteres gerado pelo LancamentoImposto. */
     @Column(nullable = false, unique = true, length = 44)
     private String numeroCodigoBarras;
 
@@ -36,50 +35,27 @@ public class BoletosPrefeitura extends PersistenceEntity implements GeradorDocum
     @Column(nullable = false)
     private LocalDate dataVencimento;
 
-    /**
-     * Status do boleto.
-     * Valores possíveis: "PENDENTE" | "PAGO" | "VENCIDO"
-     */
+    //Valores possíveis: "PENDENTE" | "PAGO" | "VENCIDO"
+
     @Column(nullable = false)
     private String status;
 
     @Column(nullable = false)
     private Boolean ativo = true;
 
-    /**
-     * Rel. 6 — lado filho: referencia o lançamento que originou este boleto.
-     * A FK "lancamento_imposto_id" fica nesta tabela.
-     */
     @ManyToOne
     @JoinColumn(name = "lancamento_imposto_id", nullable = false)
     private LancamentoImposto lancamentoImposto;
 
-    // =========================================================================
-    // MÉTODOS DE NEGÓCIO (conforme diagrama de classes)
-    // =========================================================================
 
-    /**
-     * Verifica se o boleto ultrapassou a data de vencimento.
-     *
-     * @return true se hoje é posterior à data de vencimento
-     */
     public Boolean verificarVencimento() {
         return LocalDate.now().isAfter(this.dataVencimento);
     }
 
-    /**
-     * Marca o boleto como pago.
-     * Chamado por Pagamento.processarBaixaManual() após o pagamento ser registrado.
-     */
     public void atualizarStatusParaPago() {
         this.status = "PAGO";
     }
 
-    /**
-     * Implementação de GeradorDocumentos (Rel. 3).
-     * Imprime os dados essenciais do boleto no console.
-     * Em produção, substituir pela geração de PDF da prefeitura.
-     */
     @Override
     public void imprimir() {
         System.out.printf(
