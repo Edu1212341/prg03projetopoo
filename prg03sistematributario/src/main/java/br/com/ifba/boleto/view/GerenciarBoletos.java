@@ -36,8 +36,8 @@ public class GerenciarBoletos extends javax.swing.JFrame {
         this.pagamentoController = pagamentoController;
         this.sessaoService       = sessaoService;
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setLocationRelativeTo(null);
         carregarTabela();
     }
     

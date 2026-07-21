@@ -11,6 +11,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuSair">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Images/sair.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Sair"/>
               </Properties>
               <Events>
@@ -26,6 +29,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuCadUsuario">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Images/gerenciamento-de-usuarios.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Gerenciar Usuarios"/>
               </Properties>
               <Events>
@@ -34,6 +40,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuCadContribuinte">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Images/gerenciamento.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Gerenciar Contribuintes"/>
               </Properties>
               <Events>
@@ -42,6 +51,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuImovel">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Images/casa.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Gerenciar Im&#xf3;veis"/>
               </Properties>
               <Events>
@@ -57,6 +69,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuEmissao">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Images/universidade.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Emiss&#xe3;o de Guias"/>
               </Properties>
               <Events>
@@ -65,6 +80,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuConsulta">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Images/icons8-debit-64.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Consulta D&#xe9;bitos"/>
               </Properties>
               <Events>
@@ -73,6 +91,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuGerenciarImpostos">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Images/dinheiro_1.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="GerenciarImpostos"/>
               </Properties>
               <Events>
@@ -81,6 +102,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuGerenciarPagamentos">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Images/pagamento.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Realizar Pagamentos"/>
               </Properties>
               <Events>
@@ -96,6 +120,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuSobre">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Images/icons8-question-mark-50.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Sobre"/>
               </Properties>
               <Events>
@@ -130,13 +157,57 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="700" max="32767" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="69" pref="444" max="32767" attributes="0"/>
+              <Component id="lblGerenciamentoImg" min="-2" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="lblTitulo" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblSubTitulo" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="378" max="32767" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+              <Component id="lblTitulo" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="lblSubTitulo" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="lblGerenciamentoImg" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
   </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="lblGerenciamentoImg">
+      <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/Images/equipe.png"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTitulo">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="48" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Bem vindo(a)"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblSubTitulo">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="18" style="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Sistema de Gerenciamento de Tributos"/>
+      </Properties>
+    </Component>
+  </SubComponents>
 </Form>

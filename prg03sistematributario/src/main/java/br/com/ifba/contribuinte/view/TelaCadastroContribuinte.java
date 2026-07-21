@@ -34,8 +34,8 @@ public class TelaCadastroContribuinte extends javax.swing.JFrame {
     public TelaCadastroContribuinte(ContribuinteIController contribuinteController) {
         this.contribuinteController = contribuinteController;
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setLocationRelativeTo(null);
     }
     
     public void setModo(String modo, Long id, GerenciarContribuintes principal) {

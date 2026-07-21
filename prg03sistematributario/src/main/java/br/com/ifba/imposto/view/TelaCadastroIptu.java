@@ -30,8 +30,8 @@ public class TelaCadastroIptu extends javax.swing.JFrame {
     public TelaCadastroIptu(ImpostoIController impostoController) {
         this.impostoController = impostoController;
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     public void setModo(String modo, Long id, GerenciarImpostos principal) {
@@ -93,7 +93,7 @@ public class TelaCadastroIptu extends javax.swing.JFrame {
         btnSalvar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblTitulo.setBackground(new java.awt.Color(204, 204, 255));
         lblTitulo.setFont(new java.awt.Font("Inter Black", 0, 24)); // NOI18N
@@ -187,11 +187,11 @@ public class TelaCadastroIptu extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
-                        .addComponent(lblBanco)
-                        .addContainerGap())))
+                        .addComponent(lblBanco)))
+                .addContainerGap())
         );
 
         pack();

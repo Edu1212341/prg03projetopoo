@@ -30,8 +30,8 @@ public class GerenciarImpostos extends javax.swing.JFrame {
         this.impostoController = impostoController;
         this.telaCadastro = telaCadastro;
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setLocationRelativeTo(null);
         carregarTabela();
     }
     

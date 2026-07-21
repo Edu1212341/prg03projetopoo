@@ -33,8 +33,8 @@ public class GerenciarLancamentos extends javax.swing.JFrame {
         this.telaCadastro         = telaCadastro;
         this.sessaoService        = sessaoService; 
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setLocationRelativeTo(null);
         carregarTabela();
     }
     

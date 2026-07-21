@@ -31,8 +31,8 @@ public class GerenciarContribuintes extends javax.swing.JFrame {
         this.contribuinteController = contribuinteController;
         this.telaCadastro = telaCadastro;
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setLocationRelativeTo(null);
         carregarTabela();
     }
     

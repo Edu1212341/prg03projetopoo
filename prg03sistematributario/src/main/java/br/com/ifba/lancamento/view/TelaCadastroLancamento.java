@@ -30,8 +30,8 @@ public class TelaCadastroLancamento extends javax.swing.JFrame {
     private String modo       = "SALVAR";
  
     private final LancamentoImpostoIController lancamentoController;
-    private final ImovelIController            imovelController;
-    private final ImpostoIController           impostoController;
+    private final ImovelIController imovelController;
+    private final ImpostoIController impostoController;
  
     private List<Imovel>  listaImoveis  = new ArrayList<>();
     private List<Imposto> listaImpostos = new ArrayList<>();
@@ -43,8 +43,8 @@ public class TelaCadastroLancamento extends javax.swing.JFrame {
         this.imovelController     = imovelController;
         this.impostoController    = impostoController;
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     public void setModo(String modo, Long id, GerenciarLancamentos principal) {
@@ -142,7 +142,7 @@ public class TelaCadastroLancamento extends javax.swing.JFrame {
         cmbImposto = new javax.swing.JComboBox<>();
         cmbImovel = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblTitulo.setBackground(new java.awt.Color(204, 204, 255));
         lblTitulo.setFont(new java.awt.Font("Inter Black", 0, 24)); // NOI18N

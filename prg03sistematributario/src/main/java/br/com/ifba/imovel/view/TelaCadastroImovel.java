@@ -3,8 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package br.com.ifba.imovel.view;
-
-import br.com.ifba.contribuinte.view.*;
 import br.com.ifba.contribuinte.controller.ContribuinteIController;
 import br.com.ifba.contribuinte.entity.Contribuinte;
 import br.com.ifba.contribuinte.entity.Endereco;
@@ -37,8 +35,8 @@ public class TelaCadastroImovel extends javax.swing.JFrame {
         this.imovelController = imovelController;
         this.contribuinteController = contribuinteController;
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setLocationRelativeTo(null);
     }
     
     // Método para preencher o ComboBox com dados do banco

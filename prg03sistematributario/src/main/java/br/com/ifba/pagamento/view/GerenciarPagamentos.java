@@ -30,8 +30,8 @@ public class GerenciarPagamentos extends javax.swing.JFrame {
     public GerenciarPagamentos(PagamentoIController pagamentoController) {
         this.pagamentoController = pagamentoController;
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setLocationRelativeTo(null);
         carregarTabela();
     }
     

@@ -31,8 +31,8 @@ public class GerenciarImoveis extends javax.swing.JFrame {
         this.imovelController = imovelController;
         this.telaCadastro = telaCadastro;
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setLocationRelativeTo(null);
         carregarTabela();
     }
     

@@ -28,8 +28,8 @@ public class TelaLogin extends javax.swing.JFrame {
     this.usuarioController = usuarioController;
     this.sessaoService = sessaoService; // Adicionado
     this.setResizable(false);
-    this.setLocationRelativeTo(null);
     initComponents();
+    this.setLocationRelativeTo(null);
 }
 
     /**

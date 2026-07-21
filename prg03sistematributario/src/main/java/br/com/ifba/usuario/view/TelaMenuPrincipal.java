@@ -57,8 +57,8 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         this.telaGerenciarBoletos = telaGerenciarBoletos;
         this.telaGerenciarPagamentos = telaGerenciarPagamentos;
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -70,6 +70,9 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblGerenciamentoImg = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        lblSubTitulo = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         mnuSistema = new javax.swing.JMenu();
         mnuSair = new javax.swing.JMenuItem();
@@ -87,8 +90,17 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        lblGerenciamentoImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/equipe.png"))); // NOI18N
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
+        lblTitulo.setText("Bem vindo(a)");
+
+        lblSubTitulo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblSubTitulo.setText("Sistema de Gerenciamento de Tributos");
+
         mnuSistema.setText("Sistema");
 
+        mnuSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/sair.png"))); // NOI18N
         mnuSair.setText("Sair");
         mnuSair.addActionListener(this::mnuSairActionPerformed);
         mnuSistema.add(mnuSair);
@@ -97,14 +109,17 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
         mnuCadastros.setText("Cadastros");
 
+        mnuCadUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/gerenciamento-de-usuarios.png"))); // NOI18N
         mnuCadUsuario.setText("Gerenciar Usuarios");
         mnuCadUsuario.addActionListener(this::mnuCadUsuarioActionPerformed);
         mnuCadastros.add(mnuCadUsuario);
 
+        mnuCadContribuinte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/gerenciamento.png"))); // NOI18N
         mnuCadContribuinte.setText("Gerenciar Contribuintes");
         mnuCadContribuinte.addActionListener(this::mnuCadContribuinteActionPerformed);
         mnuCadastros.add(mnuCadContribuinte);
 
+        mnuImovel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/casa.png"))); // NOI18N
         mnuImovel.setText("Gerenciar Imóveis");
         mnuImovel.addActionListener(this::mnuImovelActionPerformed);
         mnuCadastros.add(mnuImovel);
@@ -113,18 +128,22 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
         mnuTributos.setText("Tributos");
 
+        mnuEmissao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/universidade.png"))); // NOI18N
         mnuEmissao.setText("Emissão de Guias");
         mnuEmissao.addActionListener(this::mnuEmissaoActionPerformed);
         mnuTributos.add(mnuEmissao);
 
+        mnuConsulta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-debit-64.png"))); // NOI18N
         mnuConsulta.setText("Consulta Débitos");
         mnuConsulta.addActionListener(this::mnuConsultaActionPerformed);
         mnuTributos.add(mnuConsulta);
 
+        mnuGerenciarImpostos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/dinheiro_1.png"))); // NOI18N
         mnuGerenciarImpostos.setText("GerenciarImpostos");
         mnuGerenciarImpostos.addActionListener(this::mnuGerenciarImpostosActionPerformed);
         mnuTributos.add(mnuGerenciarImpostos);
 
+        mnuGerenciarPagamentos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/pagamento.png"))); // NOI18N
         mnuGerenciarPagamentos.setText("Realizar Pagamentos");
         mnuGerenciarPagamentos.addActionListener(this::mnuGerenciarPagamentosActionPerformed);
         mnuTributos.add(mnuGerenciarPagamentos);
@@ -133,6 +152,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
         mnuAjuda.setText("Ajuda");
 
+        mnuSobre.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-question-mark-50.png"))); // NOI18N
         mnuSobre.setText("Sobre");
         mnuSobre.addActionListener(this::mnuSobreActionPerformed);
         mnuAjuda.add(mnuSobre);
@@ -145,11 +165,26 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 700, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(69, 444, Short.MAX_VALUE)
+                .addComponent(lblGerenciamentoImg))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo)
+                    .addComponent(lblSubTitulo))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 378, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(lblTitulo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblSubTitulo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblGerenciamentoImg)
+                .addContainerGap())
         );
 
         pack();
@@ -276,6 +311,9 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JLabel lblGerenciamentoImg;
+    private javax.swing.JLabel lblSubTitulo;
+    private javax.swing.JLabel lblTitulo;
     private javax.swing.JMenu mnuAjuda;
     private javax.swing.JMenuItem mnuCadContribuinte;
     private javax.swing.JMenuItem mnuCadUsuario;
