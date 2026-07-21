@@ -144,7 +144,7 @@ public class TelaMenuPrincipal extends javax.swing.JFrame {
         mnuTributos.add(mnuGerenciarImpostos);
 
         mnuGerenciarPagamentos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/pagamento.png"))); // NOI18N
-        mnuGerenciarPagamentos.setText("Realizar Pagamentos");
+        mnuGerenciarPagamentos.setText("Extornar Pagamentos");
         mnuGerenciarPagamentos.addActionListener(this::mnuGerenciarPagamentosActionPerformed);
         mnuTributos.add(mnuGerenciarPagamentos);
 

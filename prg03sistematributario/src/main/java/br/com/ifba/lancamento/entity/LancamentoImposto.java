@@ -20,13 +20,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidade que representa o lançamento de um imposto sobre um imóvel.
- *
- * Relacionamentos:
- *  - Rel. 4: @ManyToOne com Imposto       (0..* lançamentos → 1 imposto)
- *  - Rel. 5: @ManyToOne com Imovel        (0..* lançamentos → 1 imóvel)
- *  - Rel. 6: @OneToMany com BoletosPrefeitura (1 lançamento → 1..* boletos)
- *
  * @author Sistema de Tributos
  */
 @Entity
@@ -59,25 +52,10 @@ public class LancamentoImposto extends PersistenceEntity {
     @JoinColumn(name = "imposto_id", nullable = false)
     private Imposto imposto;
 
-    /**
-     * Rel. 6 — Boletos gerados por este lançamento.
-     * CascadeType.ALL + orphanRemoval garante que os boletos
-     * são persistidos e removidos junto com o lançamento.
-     */
+
     @OneToMany(mappedBy = "lancamentoImposto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoletosPrefeitura> boletos = new ArrayList<>();
 
-    // =========================================================================
-    // MÉTODOS DE NEGÓCIO (conforme diagrama de classes)
-    // =========================================================================
-
-    /**
-     * Calcula o valor total do imposto e preenche os dados do lançamento.
-     * Deve ser chamado pelo Service após buscar Imovel e Imposto do banco.
-     *
-     * @param imovel  imóvel sobre o qual o imposto incide
-     * @param imposto tipo de imposto a ser aplicado
-     */
     public void processarLancamento(Imovel imovel, Imposto imposto) {
         this.imovel              = imovel;
         this.imposto             = imposto;
@@ -86,12 +64,7 @@ public class LancamentoImposto extends PersistenceEntity {
         this.ano                 = LocalDate.now().getYear();
     }
 
-    /**
-     * Cria e vincula boletos parcelados com base no valor total calculado.
-     * Cada parcela vence 1 mês após a anterior, começando no mês seguinte.
-     *
-     * @param quantidadeParcelas número de parcelas a gerar (1–12)
-     */
+    // quantidadeParcelas número de parcelas a gerar (1–12)
     public void gerarBoletosPrefeitura(Integer quantidadeParcelas) {
         this.boletos.clear();
         double valorParcela =
@@ -99,9 +72,14 @@ public class LancamentoImposto extends PersistenceEntity {
 
         for (int i = 1; i <= quantidadeParcelas; i++) {
             BoletosPrefeitura boleto = new BoletosPrefeitura();
-            boleto.setNumeroCodigoBarras(
-                UUID.randomUUID().toString().replace("-", "").substring(0, 44).toUpperCase()
-            );
+            
+            // CORREÇÃO: Gerando um código de barras numérico
+            StringBuilder codigoBarras = new StringBuilder();
+            for (int j = 0; j < 44; j++) {
+                codigoBarras.append((int) (Math.random() * 10)); // Sorteia um número de 0 a 9
+            }
+            boleto.setNumeroCodigoBarras(codigoBarras.toString());
+            
             boleto.setValorBoleto(valorParcela);
             boleto.setDataVencimento(LocalDate.now().plusMonths(i));
             boleto.setStatus("PENDENTE");

@@ -75,11 +75,11 @@
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="5" rowCount="4">
-                <Column editable="true" title="Inscri&#xe7;&#xe3;o" type="java.lang.String"/>
-                <Column editable="true" title="Contribuinte" type="java.lang.String"/>
-                <Column editable="true" title="Bairro" type="java.lang.String"/>
-                <Column editable="true" title="Valor Venal" type="java.lang.String"/>
-                <Column editable="true" title="ID" type="java.lang.Long"/>
+                <Column editable="false" title="Inscri&#xe7;&#xe3;o" type="java.lang.String"/>
+                <Column editable="false" title="Contribuinte" type="java.lang.String"/>
+                <Column editable="false" title="Bairro" type="java.lang.String"/>
+                <Column editable="false" title="Valor Venal" type="java.lang.String"/>
+                <Column editable="false" title="ID" type="java.lang.Long"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
