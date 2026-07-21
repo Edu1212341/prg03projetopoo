@@ -82,9 +82,7 @@ public class LancamentoImpostoService implements LancamentoImpostoIService {
         return lancamentoRepository.save(existente);
     }
 
-    // -------------------------------------------------------------------------
-    // FIND BY ID
-    // -------------------------------------------------------------------------
+
     @Override
     public LancamentoImposto findById(Long id) {
         log.info("Buscando LancamentoImposto ID: {}", id);
@@ -93,27 +91,21 @@ public class LancamentoImpostoService implements LancamentoImpostoIService {
                         "Lançamento de imposto não encontrado no banco de dados."));
     }
 
-    // -------------------------------------------------------------------------
-    // FIND BY ATIVO TRUE
-    // -------------------------------------------------------------------------
+
     @Override
     public List<LancamentoImposto> findByAtivoTrue() {
         log.info("Listando todos os LancamentoImpostos ativos.");
         return lancamentoRepository.findByAtivoTrue();
     }
 
-    // -------------------------------------------------------------------------
-    // FIND BY IMOVEL
-    // -------------------------------------------------------------------------
+
     @Override
     public List<LancamentoImposto> findByImovel(Long imovelId) {
         log.info("Listando lançamentos do Imóvel ID: {}", imovelId);
         return lancamentoRepository.findByImovelIdAndAtivoTrue(imovelId);
     }
 
-    // -------------------------------------------------------------------------
-    // DELETE (soft-delete)
-    // -------------------------------------------------------------------------
+
     @Override
     public void delete(Long id) {
         log.info("Inativando LancamentoImposto ID: {}", id);
@@ -130,9 +122,6 @@ public class LancamentoImpostoService implements LancamentoImpostoIService {
         log.info("LancamentoImposto ID {} inativado com sucesso.", id);
     }
 
-    // =========================================================================
-    // AUXILIARES PRIVADOS
-    // =========================================================================
 
     private Imovel findImovelById(Long id) {
         return imovelRepository.findById(id)

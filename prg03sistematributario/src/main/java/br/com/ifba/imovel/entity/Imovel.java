@@ -16,13 +16,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidade que representa um Imóvel no sistema de tributação municipal.
  *
- * Relacionamentos:
- *  - @ManyToOne  com Contribuinte: vários imóveis pertencem a um contribuinte
- *  - @OneToOne   com Endereco: cada imóvel tem seu próprio endereço
- *
- * Herda id, @Id e @GeneratedValue de PersistenceEntity.
+ * @author eduardo
  */
 @Entity
 @Table(name = "imovel")

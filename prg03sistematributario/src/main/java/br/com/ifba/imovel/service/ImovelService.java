@@ -26,9 +26,7 @@ public class ImovelService implements ImovelIService {
 
     private static final Logger log = LoggerFactory.getLogger(ImovelService.class);
 
-    // -------------------------------------------------------------------------
-    // SALVAR
-    // -------------------------------------------------------------------------
+ 
     @Override
     public Imovel save(Imovel imovel) {
         log.info("Iniciando o processo de salvar Imovel.");
@@ -49,9 +47,7 @@ public class ImovelService implements ImovelIService {
         return imovelRepository.save(imovel);
     }
 
-    // -------------------------------------------------------------------------
-    // ATUALIZAR
-    // -------------------------------------------------------------------------
+
     @Override
     public Imovel update(Long id, Imovel dadosNovos) {
         log.info("Iniciando processo de atualização de Imovel para o ID: {}", id);
@@ -100,9 +96,7 @@ public class ImovelService implements ImovelIService {
         return imovelRepository.save(imovelExistente);
     }
 
-    // -------------------------------------------------------------------------
-    // BUSCAR POR ID
-    // -------------------------------------------------------------------------
+ 
     @Override
     public Imovel findById(Long id) {
         log.info("Buscando Imovel de ID: {}.", id);
@@ -111,27 +105,20 @@ public class ImovelService implements ImovelIService {
                 .orElseThrow(() -> new IllegalArgumentException("Imóvel não encontrado no banco de dados."));
     }
 
-    // -------------------------------------------------------------------------
-    // LISTAR TODOS (apenas ativos)
-    // -------------------------------------------------------------------------
+
     @Override
     public List<Imovel> findByAtivoTrue() {
         log.info("Listando todos os Imóveis ativos.");
         return imovelRepository.findByAtivoTrue();
     }
 
-    // -------------------------------------------------------------------------
-    // LISTAR POR CONTRIBUINTE
-    // -------------------------------------------------------------------------
+
     @Override
     public List<Imovel> findByContribuinteIdAndAtivoTrue(Long contribuinteId) {
         log.info("Listando imóveis ativos do Contribuinte ID: {}", contribuinteId);
         return imovelRepository.findByContribuinteIdAndAtivoTrue(contribuinteId);
     }
 
-    // -------------------------------------------------------------------------
-    // DELETAR (soft-delete)
-    // -------------------------------------------------------------------------
     @Override
     public void deletar(Long id) {
         log.info("Iniciando a INATIVAÇÃO do Imóvel ID: {}", id);
@@ -148,9 +135,6 @@ public class ImovelService implements ImovelIService {
         log.info("Imóvel ID {} inativado com sucesso.", id);
     }
 
-    // =========================================================================
-    // VALIDAÇÃO CENTRALIZADA
-    // =========================================================================
     public void validarImovel(Imovel imovel) {
         log.info("Executando a validação de negócio para Imovel.");
 
@@ -191,9 +175,6 @@ public class ImovelService implements ImovelIService {
         log.info("Validação de Imovel concluída com sucesso.");
     }
 
-    // -------------------------------------------------------------------------
-    // AUXILIAR — Busca Contribuinte garantindo que existe
-    // -------------------------------------------------------------------------
     private Contribuinte buscarContribuintePorId(Long contribuinteId) {
         return contribuinteRepository.findById(contribuinteId)
                 .orElseThrow(() -> new IllegalArgumentException(
