@@ -23,9 +23,7 @@ public interface PagamentoRepository extends JpaRepository<Pagamento, Long> {
     /** Retorna pagamentos filtrados por status ("APROVADO" ou "ESTORNADO"). */
     List<Pagamento> findByStatusAndAtivoTrue(String status);
 
-    /**
-     * Verifica se já existe um pagamento vinculado a um boleto.
-     * Usado em PagamentoService.salvar() para impedir pagamento duplicado.
-     */
     boolean existsByBoletoPrefeituraId(Long boletoId);
+    
+    boolean existsByBoletoPrefeituraIdAndAtivoTrue(Long boletoId);
 }

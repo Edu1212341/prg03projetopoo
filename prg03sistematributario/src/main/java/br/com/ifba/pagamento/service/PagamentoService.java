@@ -37,9 +37,9 @@ public class PagamentoService implements PagamentoIService {
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Boleto não encontrado no banco de dados."));
 
-        if (pagamentoRepository.existsByBoletoPrefeituraId(boletoId)) {
+        if (pagamentoRepository.existsByBoletoPrefeituraIdAndAtivoTrue(boletoId)) {
             throw new IllegalArgumentException(
-                    "Este boleto já possui um pagamento registrado.");
+                    "Este boleto já possui um pagamento ativo registrado.");
         }
 
         if ("PAGO".equals(boleto.getStatus())) {

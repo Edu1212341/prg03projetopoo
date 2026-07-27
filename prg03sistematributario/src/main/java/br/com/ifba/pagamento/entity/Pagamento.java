@@ -40,7 +40,7 @@ public class Pagamento extends PersistenceEntity {
 
     // Rel. 7 — Um pagamento quita exatamente um boleto
     @OneToOne
-    @JoinColumn(name = "boleto_id", nullable = false, unique = true)
+    @JoinColumn(name = "boleto_id", nullable = false)
     private BoletosPrefeitura boletoPrefeitura;
 
     // Rel. 8 — lado filho: usuário operador que registrou o pagamento
