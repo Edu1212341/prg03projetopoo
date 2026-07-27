@@ -38,8 +38,7 @@ public class Pagamento extends PersistenceEntity {
     @Column(nullable = false)
     private Boolean ativo = true;
 
-    // Rel. 7 — Um pagamento quita exatamente um boleto
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "boleto_id", nullable = false)
     private BoletosPrefeitura boletoPrefeitura;
 
@@ -48,18 +47,6 @@ public class Pagamento extends PersistenceEntity {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    // =========================================================================
-    // MÉTODO DE NEGÓCIO (conforme diagrama de classes)
-    // =========================================================================
-
-    /**
-     * Processa a baixa manual de um boleto:
-     * preenche os dados do pagamento e atualiza o status do boleto para PAGO.
-     *
-     * @param boleto  boleto que será quitado
-     * @param usuario operador responsável pelo registro
-     * @return true se a baixa foi processada com sucesso
-     */
     public Boolean processarBaixaManual(BoletosPrefeitura boleto, Usuario usuario) {
         this.boletoPrefeitura = boleto;
         this.usuario          = usuario;
