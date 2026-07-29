@@ -63,14 +63,22 @@ public class GerenciarPagamentos extends javax.swing.JFrame {
                 } else {
                     nomeUsuario = "-";
                 }
+                
+                String inscricao = "Não informada";
+                if (p.getBoletoPrefeitura() != null && 
+                    p.getBoletoPrefeitura().getLancamentoImposto() != null && 
+                    p.getBoletoPrefeitura().getLancamentoImposto().getImovel() != null) {
+                    inscricao = p.getBoletoPrefeitura().getLancamentoImposto().getImovel().getInscricaoImobiliaria();
+                }
  
                 modelo.addRow(new Object[]{
-                    data,                                          // Col. 0
-                    String.format("R$ %.2f", p.getValorPago()),   // Col. 1
-                    p.getStatus(),                                 // Col. 2
-                    codigoBoleto,                                  // Col. 3
-                    nomeUsuario,                                   // Col. 4
-                    p.getId()                                      // Col. 5
+                    inscricao,
+                    data,                                        
+                    String.format("R$ %.2f", p.getValorPago()),  
+                    p.getStatus(),                                 
+                    codigoBoleto,                                  
+                    nomeUsuario,                                  
+                    p.getId()                                      
                 });
             }
         } catch (Exception e) {
@@ -97,20 +105,20 @@ public class GerenciarPagamentos extends javax.swing.JFrame {
 
         tblPagamentos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Data", "Valor Pago", "Status", "Boleto", "Operador", "ID"
+                "Inscrição Imobiliária", "Data", "Valor Pago", "Status", "Boleto", "Operador", "ID"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -175,9 +183,10 @@ public class GerenciarPagamentos extends javax.swing.JFrame {
             return;
         }
  
-        Long   id     = (Long)   tblPagamentos.getValueAt(linha, 5);
-        String status = (String) tblPagamentos.getValueAt(linha, 2);
-        String valor  = (String) tblPagamentos.getValueAt(linha, 1);
+        Long   id        = (Long)   tblPagamentos.getValueAt(linha, 6); 
+        String status    = (String) tblPagamentos.getValueAt(linha, 3); 
+        String valor     = (String) tblPagamentos.getValueAt(linha, 2); 
+        String inscricao = (String) tblPagamentos.getValueAt(linha, 0);
  
         if (status.equals("ESTORNADO")) {
             JOptionPane.showMessageDialog(this,
@@ -187,7 +196,7 @@ public class GerenciarPagamentos extends javax.swing.JFrame {
         }
  
         int confirmacao = JOptionPane.showConfirmDialog(this,
-                "Tem certeza que deseja ESTORNAR o pagamento de " + valor + "?\n"
+                "Tem certeza que deseja ESTORNAR o pagamento de " + valor + " referente à inscrição " + inscricao + "?\n"
                 + "O boleto voltará para o status PENDENTE.",
                 "Confirmar Estorno", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
  
@@ -209,7 +218,7 @@ public class GerenciarPagamentos extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        String texto = txtBuscar.getText().trim();
+        String texto = txtBuscar.getText().trim().toLowerCase();
  
         if (texto.isEmpty()) {
             carregarTabela();
@@ -236,21 +245,25 @@ public class GerenciarPagamentos extends javax.swing.JFrame {
                 } else {
                     codBoleto = "";
                 }
+                
+                String inscricao = "";
+                if (p.getBoletoPrefeitura() != null && 
+                    p.getBoletoPrefeitura().getLancamentoImposto() != null && 
+                    p.getBoletoPrefeitura().getLancamentoImposto().getImovel() != null) {
+                    inscricao = p.getBoletoPrefeitura().getLancamentoImposto().getImovel().getInscricaoImobiliaria();
+                }
  
+                boolean correspondeInscricao = inscricao.toLowerCase().contains(texto);
                 boolean correspondeStatus  = p.getStatus().toLowerCase().contains(texto.toLowerCase());
                 boolean correspondeUsuario = nomeUsuario.toLowerCase().contains(texto.toLowerCase());
                 boolean correspondeBoleto  = codBoleto.toLowerCase().contains(texto.toLowerCase());
  
-                if (correspondeStatus || correspondeUsuario || correspondeBoleto) {
+                if (correspondeInscricao || correspondeStatus || correspondeUsuario || correspondeBoleto) {
  
-                    String data;
-                    if (p.getDataPagamento() != null) {
-                        data = p.getDataPagamento().format(FMT_DATA);
-                    } else {
-                        data = "-";
-                    }
+                    String data = (p.getDataPagamento() != null) ? p.getDataPagamento().format(FMT_DATA) : "-";
  
                     modelo.addRow(new Object[]{
+                        inscricao,
                         data,
                         String.format("R$ %.2f", p.getValorPago()),
                         p.getStatus(),

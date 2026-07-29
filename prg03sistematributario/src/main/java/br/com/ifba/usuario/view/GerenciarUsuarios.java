@@ -4,11 +4,9 @@
  */
 package br.com.ifba.usuario.view;
 
-import br.com.ifba.contribuinte.view.GerenciarContribuintes;
 import br.com.ifba.usuario.controller.UsuarioIController;
 import br.com.ifba.usuario.entity.Usuario;
 import br.com.ifba.usuario.service.SessaoService;
-import java.util.List;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

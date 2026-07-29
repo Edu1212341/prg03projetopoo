@@ -60,9 +60,15 @@ public class GerenciarBoletos extends javax.swing.JFrame {
                 } else {
                     vencimento = "-";
                 }
+                
+                String inscricao = "Não informada";
+                if (b.getLancamentoImposto() != null && b.getLancamentoImposto().getImovel() != null) {
+                    inscricao = b.getLancamentoImposto().getImovel().getInscricaoImobiliaria();
+                }
  
                 modelo.addRow(new Object[]{
-                    b.getNumeroCodigoBarras(),                      // Colunas
+                    inscricao,
+                    b.getNumeroCodigoBarras(),  
                     String.format("R$ %.2f", b.getValorBoleto()),  
                     vencimento,                                   
                     b.getStatus(),                                 
@@ -94,20 +100,20 @@ public class GerenciarBoletos extends javax.swing.JFrame {
 
         tblBoletos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Código de barras", "Valor", "Vencimento", "Status", "ID"
+                "Inscrição Imobiliária", "Código de barras", "Valor", "Vencimento", "Status", "ID"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -119,6 +125,14 @@ public class GerenciarBoletos extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tblBoletos);
+        if (tblBoletos.getColumnModel().getColumnCount() > 0) {
+            tblBoletos.getColumnModel().getColumn(0).setResizable(false);
+            tblBoletos.getColumnModel().getColumn(1).setResizable(false);
+            tblBoletos.getColumnModel().getColumn(2).setResizable(false);
+            tblBoletos.getColumnModel().getColumn(3).setResizable(false);
+            tblBoletos.getColumnModel().getColumn(4).setResizable(false);
+            tblBoletos.getColumnModel().getColumn(5).setResizable(false);
+        }
 
         btnPagar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/dinheiro.png"))); // NOI18N
         btnPagar.addActionListener(this::btnPagarActionPerformed);
@@ -156,9 +170,8 @@ public class GerenciarBoletos extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
                 .addGap(15, 15, 15))
@@ -177,9 +190,9 @@ public class GerenciarBoletos extends javax.swing.JFrame {
             return;
         }
  
-        Long   boletoId = (Long)   tblBoletos.getValueAt(linha, 4);
-        String status   = (String) tblBoletos.getValueAt(linha, 3);
-        String valor    = (String) tblBoletos.getValueAt(linha, 1);
+        Long   boletoId = (Long)   tblBoletos.getValueAt(linha, 5); 
+        String status   = (String) tblBoletos.getValueAt(linha, 4); 
+        String valor    = (String) tblBoletos.getValueAt(linha, 2);
  
         if (status.equals("PAGO")) {
             JOptionPane.showMessageDialog(this,
@@ -229,12 +242,10 @@ public class GerenciarBoletos extends javax.swing.JFrame {
             return;
         }
  
-        Long   id     = (Long)   tblBoletos.getValueAt(linha, 4);
-        String codigo = (String) tblBoletos.getValueAt(linha, 0);
+        Long   id        = (Long)   tblBoletos.getValueAt(linha, 5); // Agora é 5
+        String inscricao = (String) tblBoletos.getValueAt(linha, 0);
  
-        int confirmacao = JOptionPane.showConfirmDialog(this,
-                "Tem certeza que deseja excluir o boleto:\n\"" + codigo + "\"?",
-                "Confirmar Exclusão", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        int confirmacao = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o boleto da inscrição:\n\"" + inscricao + "\"?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
  
         if (confirmacao == JOptionPane.YES_OPTION) {
             try {
@@ -254,7 +265,7 @@ public class GerenciarBoletos extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        String texto = txtBuscar.getText().trim();
+        String texto = txtBuscar.getText().trim().toLowerCase();
  
         if (texto.isEmpty()) {
             carregarTabela();
@@ -268,22 +279,20 @@ public class GerenciarBoletos extends javax.swing.JFrame {
         try {
             for (BoletosPrefeitura b : boletoController.findByAtivoTrue()) {
  
-                boolean correspondeCodigoBarras = b.getNumeroCodigoBarras()
-                        .toLowerCase().contains(texto.toLowerCase());
+                String inscricao = "";
+                if (b.getLancamentoImposto() != null && b.getLancamentoImposto().getImovel() != null) {
+                    inscricao = b.getLancamentoImposto().getImovel().getInscricaoImobiliaria();
+                }
+                
+                //  o filtro principal é a Inscrição Imobiliária
+                boolean correspondeInscricao = inscricao.toLowerCase().contains(texto);
+                boolean correspondeStatus = b.getStatus().toLowerCase().contains(texto);
  
-                boolean correspondeStatus = b.getStatus()
-                        .toLowerCase().contains(texto.toLowerCase());
- 
-                if (correspondeCodigoBarras || correspondeStatus) {
- 
-                    String vencimento;
-                    if (b.getDataVencimento() != null) {
-                        vencimento = b.getDataVencimento().format(FMT_DATA);
-                    } else {
-                        vencimento = "-";
-                    }
+                if (correspondeInscricao || correspondeStatus) {
+                    String vencimento = (b.getDataVencimento() != null) ? b.getDataVencimento().format(FMT_DATA) : "-";
  
                     modelo.addRow(new Object[]{
+                        inscricao,
                         b.getNumeroCodigoBarras(),
                         String.format("R$ %.2f", b.getValorBoleto()),
                         vencimento,
